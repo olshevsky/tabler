@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div id="app">
+        <v-tabler :url="'http://localhost:8080/v-tabler/data.php'" :fields="fields"></v-tabler>
+    </div>
+<script src="https://unpkg.com/vue"></script>
+<script src="./dist/v-tabler.min.js"></script>
+<script>
+    const app = new Vue({
+        el: '#app',
+//        components: {'v-tabler': 'v-tabler'},
+        data: {
+            fields: [
+                {key: 'date', type: 'string', title: 'Date'},
+                {key: 'user', type: 'string', title: 'User'},
+                {key: 'orderno', type: 'string', title: 'Order no'}
+            ]
+        }
+    })
+</script>
+</body>
+</html>
