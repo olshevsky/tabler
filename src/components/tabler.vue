@@ -1,10 +1,16 @@
 <template>
     <div>
-        <table>
+        <p>Search by:</p>
+        <input v-model="searchBy"/>
+        <a href="#" v-on:click="clearSearch()">x</a>
+
+        <table :class="tableClass">
+            <caption v-if="caption">{{caption}}</caption>
             <thead>
             <tr>
                 <th v-for="field in fields">
-                    <a href="#" v-on:click="sort(field.key)">{{field.title | capitalize}}</a>
+                    <a v-if="sortBy == field.key" href="#" @click="sort(field.key)"> <i :class="{ 'uk-icon-long-arrow-up': (sortOrder === 'ASC'), 'uk-icon-long-arrow-down': (sortOrder === 'DESC') }"></i> {{field.title}}</a>
+                    <a v-else @click="sort(field.key)"> <i class="uk-icon-arrows-v"></i> {{field.title}}</a>
                 </th>
             </tr>
             </thead>
@@ -14,39 +20,45 @@
             </tr>
             </tbody>
         </table>
-
-        <br>
-        <br>
-        <br>
-
-        <p>{{currentPage}} page from {{totalPages}}</p>
-        <button v-on:click="firstPage()"> &lt; &lt;</button>
-        <button v-on:click="prevPage()"> &lt;</button>
-        <input v-model="currentPage"/>
-        <button v-on:click="nextPage()"> &gt;</button>
-        <button v-on:click="lastPage()"> &gt; &gt;</button>
-
-        <br>
-        <br>
-        <br>
-
-        <p>Search by:</p>
-        <input v-model="searchBy"/>
-        <a href="#" v-on:click="clearSearch()">x</a>
+        <ul class="uk-pagination">
+            <li>
+                <a href="#" @click="firstPage()">
+                    <i class="uk-icon-angle-double-left"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" @click="prevPage()">
+                    <i class="uk-icon-angle-left"></i>
+                </a>
+            </li>
+            <li v-for="n in this.totalPages" :class="{ 'uk-active': (n == currentPage) }">
+                <a @click="toPage(n)">{{n}}</a>
+            </li>
+            <li>
+                <a href="#" @click="nextPage()">
+                    <i class="uk-icon-angle-right"></i>
+                </a>
+            </li>
+            <li>
+                <a href="#" @click="lastPage()">
+                    <i class="uk-icon-angle-double-right"></i>
+                </a>
+            </li>
+        </ul>
     </div>
 </template>
 
 <script>
-    function quickSort(items, key, left, right) {
+    function quickSort(items, order,key, left, right) {
         let index
         if (items.length > 1) {
             left = typeof left != "number" ? 0 : left
             right = typeof right != "number" ? items.length - 1 : right
-            index = partition(items, left, right);
+            index = partition(items, left, right, order)
             if (left < index - 1)
-                quickSort(items, key, left, index - 1)
+                quickSort(items, key, order, left, index - 1)
             if (index < right)
-                quickSort(items, key, index, right)
+                quickSort(items, key, order, index, right)
         }
 
         return items
@@ -57,17 +69,22 @@
             items[secondIndex] = temp
         }
 
-        function partition(items, left, right) {
+        function partition(items, left, right, order) {
+
+            console.log('-------start---------')
+            console.log(left)
+            console.log(right)
+            console.log('------end----------')
 
             let pivot   = items[Math.floor((right + left) / 2)][key],
                 i       = left,
                 j       = right
 
             while (i <= j) {
-                while (compare(items[i][key], pivot) === -1) {
+                while (compare(items[i][key], pivot, order) === -1) {
                     i++
                 }
-                while (compare(items[j][key], pivot) === 1) {
+                while (compare(items[j][key], pivot, order) === 1) {
                     j--
                 }
                 if (i <= j) {
@@ -85,15 +102,16 @@
             Return 1 if value on the left is greater
             Return -1 if the value on the right is greater
         */
-        function compare(left, right){
+        function compare(left, right, order){
 
-//            console.log(left)
+            left = Number(left)
+            right = Number(right)
 
             if(left < right){
-                return -1
+                return (order === 'ASC') ? -1 : 1
             }
             else if(left > right){
-                return 1
+                return (order === 'ASC') ? 1 : -1
             }
             else{
                 return 0
@@ -139,20 +157,23 @@
     }
 
     module.exports = {
-        name: "v-tabler",
+        name: "tabler",
         props: {
-            json: {type: Array},
             url: {type: String},
+            json: {type: Array, default: () => {return []}},
+            fields: {type: Array, default: () => {return []}},
             perPage: {type: Number, default: 3},
             page: {type: Number, default: 1},
-            fields: {type: Array}
+            tableClass: {type: String, default: 'uk-table uk-table-striped'},
+            caption: {type: String, default: null}
         },
         created: function () {
             if (!this.json && this.url) {
                 this.rawData = this.fetchData()
             }
-            else
+            else{
                 this.rawData = this.json
+            }
         },
         methods: {
             fetchData: function () {
@@ -177,12 +198,18 @@
             lastPage: function () {
                 this.currentPage = this.totalPages
             },
+            toPage: function (page) {
+                if(page > 0 && page <= this.totalPages)
+                    this.currentPage = page
+            },
             clearSearch: function () {
                 this.searchBy = null
             },
             sort(by){
                 if(by === this.sortBy ){
                     this.sortOrder = (this.sortOrder === 'ASC') ? 'DESC' : 'ASC'
+                    console.log('sort')
+                    console.log(this.sortOrder)
                 }
                 else{
                     this.sortBy = by
@@ -201,36 +228,38 @@
         },
         computed: {
             rows: function () {
-                let rows = []
+                let row = []
                 if (this.searchBy) {
                     this.currentPage = 1
-                    rows = this.rawData.filter(row => {
+                    row = this.rawData.filter(row => {
                         for (let id in this.fields) {
-                            if (row[this.fields[id].key].toLowerCase().indexOf(this.searchBy) > -1) {
+                            if (row[this.fields[id].key] &&
+                                row[this.fields[id].key].toLowerCase().indexOf(this.searchBy) > -1) {
                                 return row
                             }
                         }
                     })
                 }
                 else{
-                    rows = this.rawData
+                    row = this.rawData
                 }
 
                 if(this.sortBy){
-                    rows = quickSort(rows, this.sortBy)
-                    if(this.sortOrder === 'DESC'){
-                        rows = rows.reverse()
-                    }
+                    row = quickSort(row, this.sortBy, this.sortOrder)
+//                    if(this.sortOrder === 'DESC'){
+//                        let tmp = row.reverse()
+//                        row = row.reverse()
+//                    }
                 }
 
-                return (rows) ? rows : this.rawData
+                return (row) ? row : this.rawData
             },
             paginatedRows: function () {
                 let startIndex = (this.currentPage - 1) * this.perPage
-                return this.rows.slice(startIndex, startIndex + this.perPage)
+                return (this.rows && this.rows.length > 0) ? this.rows.slice(startIndex, startIndex + this.perPage) : []
             },
             totalPages: function () {
-                return Math.ceil(this.rows.length / this.perPage) || 1
+                return (this.rows) ? Math.ceil(this.rows.length / this.perPage) : 1
             }
         },
         watch: {
@@ -242,9 +271,9 @@
             },
             'sortBy': function () {
                 this.sortOrder = 'ASC'
-                console.log('order change')
             }
         },
+        /*
         filters: {
             capitalize: function (val) {
                 if (val)
@@ -252,6 +281,7 @@
                 return ''
             }
         }
+        */
     }
 </script>
 

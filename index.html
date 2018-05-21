@@ -3,22 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.min.css"/>-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.almost-flat.min.css"/>
 </head>
 <body>
-    <div id="app">
-        <v-tabler :url="'http://localhost:8080/v-tabler/data.php'" :fields="fields"></v-tabler>
+    <div id="app" style="width: 1000px; margin: 0 auto">
+        <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10"></tabler>
     </div>
-<script src="https://unpkg.com/vue"></script>
-<script src="./dist/v-tabler.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.0/vue-resource.min.js"></script>
+<script src="./src/components/dist/tabler.umd.js"></script>
 <script>
     const app = new Vue({
         el: '#app',
-//        components: {'v-tabler': 'v-tabler'},
+        components: {
+            tabler
+        },
+        created: function(){
+          console.log('created')
+        },
         data: {
             fields: [
-                {key: 'date', type: 'string', title: 'Date'},
-                {key: 'user', type: 'string', title: 'User'},
-                {key: 'orderno', type: 'string', title: 'Order no'}
+                {key: 'id', type: 'number', title: 'Id'},
+                {key: 'date', type: 'date', format:'dd.mm.yyyy', title: 'Date'},
+                {key: 'name', type: 'string', title: 'Name'},
+                {key: 'lastName', type: 'string', title: 'Last Name'},
+                {key: 'orderno', type: 'number', title: 'Order no'},
+                {key: 'html', type: 'template', title: 'Actions'}
+            ],
+            json: [
+                {id: 1, date: '12.08.1999', name: 'Artur', lastName: 'Ols', orderno: '1234', html: '<button>test</button>'},
+                {id: 2, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 3, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 4, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 5, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 6, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 7, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 8, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 9, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 10, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 11, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 12, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 13, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 14, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 15, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 16, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {id: 17, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
             ]
         }
     })

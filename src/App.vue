@@ -1,12 +1,12 @@
 <template>
   <div id="app">
-    <v-tabler :json="json" :fields="fields" :page="1" :per-page="20"></v-tabler>
+    <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10"></tabler>
   </div>
 </template>
 
 <script>
 
-import Tabler from './components/Tabler.vue'
+import Tabler from './components/tabler.vue'
 import VueResource from 'vue-resource'
 
 export default {
@@ -163,7 +163,7 @@ export default {
     }
   },
   components: {
-    'v-tabler': Tabler
+    'tabler': Tabler
   }
 }
 </script>
