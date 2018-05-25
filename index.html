@@ -5,10 +5,12 @@
     <title>Title</title>
     <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.min.css"/>-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/uikit.almost-flat.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.5/css/components/search.almost-flat.min.css"/>
+    <link rel="stylesheet" href="src/components/dist/tabler.css"/>
 </head>
 <body>
-    <div id="app" style="width: 1000px; margin: 0 auto">
-        <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10"></tabler>
+    <div id="app" style="width: 1200px; margin: 0 auto">
+        <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10" :caption="'My first table'" @clicked="onButtonClick" @checked="onChecked"></tabler>
     </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.0/vue-resource.min.js"></script>
@@ -19,36 +21,55 @@
         components: {
             tabler
         },
-        created: function(){
-          console.log('created')
+        methods:{
+            onButtonClick: function (field) {
+                console.log('onButtonClick')
+                console.log(field)
+                alert('button')
+            },
+            onChecked: function (field) {
+                console.log(field)
+            }
         },
         data: {
             fields: [
                 {key: 'id', type: 'number', title: 'Id'},
-                {key: 'date', type: 'date', format:'dd.mm.yyyy', title: 'Date'},
+                {key: 'ch', type: 'checkbox', title: 'Check'},
+                {key: 'img', type: 'img', title: 'Image', width: 75, height: 75},
+                {key: 'order_date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
                 {key: 'name', type: 'string', title: 'Name'},
                 {key: 'lastName', type: 'string', title: 'Last Name'},
                 {key: 'orderno', type: 'number', title: 'Order no'},
-                {key: 'html', type: 'template', title: 'Actions'}
+                {key: 'audio', type: 'audio', title: 'Audio'},
+                {key: 'btn', type: 'button', title: 'Delete', class:"uk-button uk-button-danger", name: "Delete", icon: "uk-icon-trash"},
+                {key: 'btn2', type: 'button', title: 'Watch', class:"uk-button uk-button-primary", icon: "uk-icon-eye"},
             ],
             json: [
-                {id: 1, date: '12.08.1999', name: 'Artur', lastName: 'Ols', orderno: '1234', html: '<button>test</button>'},
-                {id: 2, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 3, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 4, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 5, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 6, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 7, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 8, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 9, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 10, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 11, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 12, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 13, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 14, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 15, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 16, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
-                {id: 17, date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221', html: '<button>test</button>'},
+                {ch: 'checked', id: 1, order_date: '12.08.1999', name: 'Artur', lastName: 'Ols', orderno: '1234', btn: 'test', img: 'http://www.bondara.co.uk/ml/11/f-enlargev2/products/bf46.jpg', audio: 'http://media.zdorov-group.eu:88/monitor1/2018/05/22/206/22052018105919_206.mp3'},
+                {id: 2, order_date: '12.08.1995', name: 'Andrew', lastName: 'Was', orderno: '31221'},
+                {id: 3, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty08.svg'},
+                {id: 4, order_date: '12.08.1998', name: 'Skujbeda', lastName: 'Beda', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty02.svg'},
+                {id: 5, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '19',  img: 'https://www.cryptokitties.co/images/landing-kitty01.svg'},
+                {id: 6, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty03.svg'},
+                {id: 7, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty04.svg'},
+                {id: 8, order_date: '12.08.1991', name: 'Moew', lastName: 'Moew', orderno: '666',  img: 'https://www.cryptokitties.co/images/landing-kitty05.svg'},
+                {id: 9, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty06.svg'},
+                {id: 10, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty07.svg'},
+                {id: 11, order_date: '12.08.1995', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty08.svg'},
+                {id: 12, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty09.svg'},
+                {id: 13, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty02.svg'},
+                {id: 14, order_date: '13.08.1994', name: 'Andrew', lastName: 'ABC', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty03.svg'},
+                {id: 15, order_date: '12.08.1999', name: 'Andrew', lastName: 'ABC', orderno: '111',  img: 'https://www.cryptokitties.co/images/landing-kitty04.svg'},
+                {id: 16, order_date: '12.08.1991', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty05.svg'},
+                {id: 18, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '101010',  img: 'https://www.cryptokitties.co/images/landing-kitty01.svg'},
+                {id: 19, order_date: '12.08.1999', name: 'Andrew', lastName: 'Abc', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty09.svg'},
+                {id: 20, order_date: '12.08.1989', name: 'Andrew', lastName: 'Abc', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty08.svg'},
+                {id: 21, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty07.svg'},
+                {id: 22, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty06.svg'},
+                {id: 23, order_date: '12.08.1999', name: 'Andrew', lastName: 'Abc', orderno: '1111',  img: 'https://www.cryptokitties.co/images/landing-kitty05.svg'},
+                {id: 24, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '100',  img: 'https://www.cryptokitties.co/images/landing-kitty04.svg'},
+                {id: 25, order_date: '12.08.1999', name: 'Andrew', lastName: 'Was', orderno: '31221',  img: 'https://www.cryptokitties.co/images/landing-kitty03.svg'},
+                {id: 26, order_date: '13.11.2017', name: 'Andrew', lastName: 'Abc', orderno: '101',  img: 'https://www.cryptokitties.co/images/landing-kitty02.svg'},
             ]
         }
     })

@@ -23,7 +23,11 @@
             </thead>
             <tbody>
                 <tr v-if="paginatedRows" v-for="row in paginatedRows">
-                    <td v-for="field in row" v-html="renderField(field)"></td>
+                    <td v-for="field in row">
+                        <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
+                        <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
+                        <div v-else v-html="renderField(field)"></div>
+                    </td>
                 </tr>
                 <tr v-else="">
                     <td>no data</td>
@@ -60,8 +64,15 @@
 
 <script>
 
+    import Button from './button.vue'
+    import Checkbox from './checkbox.vue'
+
     export default{
         name: "tabler",
+        components: {
+            'v-button': Button,
+            'v-checkbox': Checkbox
+        },
         props: {
             url: {type: String},
             json: {type: Array, default: () => {return []}},
@@ -91,6 +102,12 @@
             this.data = data
         },
         methods: {
+            onButtonClick: function (field) {
+                this.$emit('clicked', field)
+            },
+            onChecked: function(field){
+                this.$emit('checked', field)
+            },
             fetchData: function () {
                 this.$http.get(this.url).then(response => {
                     console.log(response)
@@ -204,7 +221,8 @@
                 }
 
                 return arr.sort(compare)
-            }
+            },
+
         },
         data: function () {
             return {
