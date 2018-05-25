@@ -1,23 +1,33 @@
 <template>
     <div>
-        <p>Search by:</p>
-        <input v-model="searchBy"/>
-        <a href="#" v-on:click="clearSearch()">x</a>
-
+        <div class="search">
+            <div class="right">
+                <a href="#" v-on:click="clearSearch()"><i class="uk-icon-trash"></i></a>
+            </div>
+            <div class="left">
+                <form class="uk-search">
+                    <input v-model="searchBy" class="uk-search-field" type="search" placeholder="Search by"/>
+                </form>
+            </div>
+            <div class="fclear"></div>
+        </div>
         <table :class="tableClass">
             <caption v-if="caption">{{caption}}</caption>
             <thead>
-            <tr>
-                <th v-for="field in fields">
-                    <a v-if="sortBy == field.key" href="#" @click="sort(field.key)"> <i :class="{ 'uk-icon-long-arrow-up': (sortOrder === 'ASC'), 'uk-icon-long-arrow-down': (sortOrder === 'DESC') }"></i> {{field.title}}</a>
-                    <a v-else @click="sort(field.key)"> <i class="uk-icon-arrows-v"></i> {{field.title}}</a>
-                </th>
-            </tr>
+                <tr>
+                    <th v-for="field in fields">
+                        <a v-if="sortBy == field.key" href="#" @click="sort(field.key)">{{field.title}} <i :class="{ 'uk-icon-sort-amount-asc': (!sortOrderDesc), 'uk-icon-sort-amount-desc': (sortOrderDesc) }"></i></a>
+                        <a v-else @click="sort(field.key)">{{field.title}} <i class="uk-icon-sort"></i></a>
+                    </th>
+                </tr>
             </thead>
             <tbody>
-            <tr v-for="row in paginatedRows">
-                <td v-for="field in fields">{{row[field.key]}}</td>
-            </tr>
+                <tr v-if="paginatedRows" v-for="row in paginatedRows">
+                    <td v-for="field in row" v-html="renderField(field)"></td>
+                </tr>
+                <tr v-else="">
+                    <td>no data</td>
+                </tr>
             </tbody>
         </table>
         <ul class="uk-pagination">
@@ -49,114 +59,8 @@
 </template>
 
 <script>
-    function quickSort(items, order,key, left, right) {
-        let index
-        if (items.length > 1) {
-            left = typeof left != "number" ? 0 : left
-            right = typeof right != "number" ? items.length - 1 : right
-            index = partition(items, left, right, order)
-            if (left < index - 1)
-                quickSort(items, key, order, left, index - 1)
-            if (index < right)
-                quickSort(items, key, order, index, right)
-        }
 
-        return items
-
-        function swap(items, firstIndex, secondIndex){
-            let temp = items[firstIndex]
-            items[firstIndex] = items[secondIndex]
-            items[secondIndex] = temp
-        }
-
-        function partition(items, left, right, order) {
-
-            console.log('-------start---------')
-            console.log(left)
-            console.log(right)
-            console.log('------end----------')
-
-            let pivot   = items[Math.floor((right + left) / 2)][key],
-                i       = left,
-                j       = right
-
-            while (i <= j) {
-                while (compare(items[i][key], pivot, order) === -1) {
-                    i++
-                }
-                while (compare(items[j][key], pivot, order) === 1) {
-                    j--
-                }
-                if (i <= j) {
-                    swap(items, i, j)
-                    i++
-                    j--
-                }
-            }
-
-            return i
-        }
-
-        /*
-            Return 0 if values on either side are equal
-            Return 1 if value on the left is greater
-            Return -1 if the value on the right is greater
-        */
-        function compare(left, right, order){
-
-            left = Number(left)
-            right = Number(right)
-
-            if(left < right){
-                return (order === 'ASC') ? -1 : 1
-            }
-            else if(left > right){
-                return (order === 'ASC') ? 1 : -1
-            }
-            else{
-                return 0
-            }
-//
-//            switch (item1.type){
-//                case 'date':
-//                    break;
-//                case 'number':
-//                    break;
-//                case 'string':
-//
-//                    break;
-//            }
-        }
-
-//        function strToDate(val, format) {
-//
-//            var normalized = val.replace(/[^a-zA-Z0-9]/g, '-')
-//            var normalizedFormat = format.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
-//            var formatItems = normalizedFormat.split('-')
-//            var dateItems = normalized.split('-')
-//
-//            var monthIndex  = formatItems.indexOf("mm")
-//            var dayIndex    = formatItems.indexOf("dd")
-//            var yearIndex   = formatItems.indexOf("yyyy")
-//            var hourIndex     = formatItems.indexOf("hh")
-//            var minutesIndex  = formatItems.indexOf("ii")
-//            var secondsIndex  = formatItems.indexOf("ss")
-//
-//            var today = new Date()
-//
-//            var year  = yearIndex > -1  ? dateItems[yearIndex]    : today.getFullYear()
-//            var month = monthIndex > -1 ? dateItems[monthIndex] - 1 : today.getMonth() - 1
-//            var day   = dayIndex > -1   ? dateItems[dayIndex]     : today.getDate()
-//
-//            var hour    = hourIndex > -1      ? dateItems[hourIndex]    : today.getHours()
-//            var minute  = minutesIndex > - 1   ? dateItems[minutesIndex] : today.getMinutes()
-//            var second  = secondsIndex > -1   ? dateItems[secondsIndex] : today.getSeconds()
-//
-//            return new Date(year,month,day,hour,minute,second)
-//        }
-    }
-
-    module.exports = {
+    export default{
         name: "tabler",
         props: {
             url: {type: String},
@@ -165,15 +69,26 @@
             perPage: {type: Number, default: 3},
             page: {type: Number, default: 1},
             tableClass: {type: String, default: 'uk-table uk-table-striped'},
-            caption: {type: String, default: null}
+            caption: {type: String, default: null},
+            trans: {type: Object, default: () => {
+                return {
+                    noImage: 'no image',
+                    noAudio: 'no audio'
+                }
+            }}
         },
         created: function () {
-            if (!this.json && this.url) {
-                this.rawData = this.fetchData()
+            let rawData = (!this.json && this.url) ? rawData = this.fetchData() : this.json
+            let data = []
+            for(let i in rawData){
+                let row = {}
+                for(let j in this.fields){
+                    row[this.fields[j].key] = JSON.parse(JSON.stringify(this.fields[j]))
+                    row[this.fields[j].key].value = rawData[i][ this.fields[j].key]
+                }
+                data.push(row)
             }
-            else{
-                this.rawData = this.json
-            }
+            this.data = data
         },
         methods: {
             fetchData: function () {
@@ -207,52 +122,122 @@
             },
             sort(by){
                 if(by === this.sortBy ){
-                    this.sortOrder = (this.sortOrder === 'ASC') ? 'DESC' : 'ASC'
-                    console.log('sort')
-                    console.log(this.sortOrder)
+                    this.sortOrderDesc = !this.sortOrderDesc
                 }
                 else{
                     this.sortBy = by
-                    this.sortOrder = 'ASC'
+                    this.sortOrderDesc = false
                 }
+            },
+            renderField(field){
+                switch (field.type){
+                    case 'img':
+                        return this.renderImg(field)
+                    case 'audio':
+                        return this.renderAudio(field)
+                    default:
+                        return field.value
+                }
+            },
+            renderImg(field){
+                let width = (field.width) ? field.width : "auto"
+                let height = (field.height) ? field.height : "auto"
+                let fontSize = (height !== "auto") ? height : 50
+                let alt = ''
+                if(!field.alt)
+                    alt = (field.value) ? field.value.slice(field.value.lastIndexOf('/')+1) : this.trans.noImage
+                if(!field.value)
+                    return '<div class="img-wrapp"><i class="uk-icon-file-picture-o" style="font-size: '+fontSize+'px"></i></div>'
+                else
+                    return '<div class="img-wrapp"><img src="'+field.value+'" width="'+width+'" height="'+height+'" alt="'+alt+'"/></div>'
+            },
+            renderAudio(field){
+                if(field.value)
+                    return '<audio preload="auto" controls="controls"><source src="'+field.value+'" type="audio/mpeg">Your browser does not support the audio tag.</audio>'
+                else
+                    return this.trans.noAudio
+            },
+            mySort(data, index, desc) {
+                let arr = JSON.parse(JSON.stringify(data))
+                function compareNumber(a, b) {
+                    return (desc) ? Number(b.value) - Number(a.value) : Number(a.value) - Number(b.value)
+                }
+                function compareString(a, b) {
+                    return (desc) ? b.value.localeCompare(a.value) : a.value.localeCompare(b.value)
+                }
+                function compareDate(a, b) {
+                    return (desc) ? strToDate(b.value, b.format) - strToDate(a.value, a.format) : strToDate(a.value, a.format) - strToDate(b.value, b.format)
+                }
+                function strToDate(val, format) {
+                    let normalized = val.replace(/[^a-zA-Z0-9]/g, '-')
+                    let normalizedFormat = format.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
+                    let formatItems = normalizedFormat.split('-')
+                    let dateItems = normalized.split('-')
+                    let monthIndex  = formatItems.indexOf("mm")
+                    let dayIndex    = formatItems.indexOf("dd")
+                    let yearIndex   = formatItems.indexOf("yyyy")
+                    let hourIndex     = formatItems.indexOf("hh")
+                    let minutesIndex  = formatItems.indexOf("ii")
+                    let secondsIndex  = formatItems.indexOf("ss")
+                    let today = new Date()
+                    let year  = yearIndex > -1  ? dateItems[yearIndex]    : today.getFullYear()
+                    let month = monthIndex > -1 ? dateItems[monthIndex] - 1 : today.getMonth() - 1
+                    let day   = dayIndex > -1   ? dateItems[dayIndex]     : today.getDate()
+                    let hour    = hourIndex > -1      ? dateItems[hourIndex]    : today.getHours()
+                    let minute  = minutesIndex > - 1   ? dateItems[minutesIndex] : today.getMinutes()
+                    let second  = secondsIndex > -1   ? dateItems[secondsIndex] : today.getSeconds()
+                    return new Date(year,month,day,hour,minute,second)
+                }
+                function compare(a, b){
+                    if(a[index] && b[index]){
+                        switch (a[index].type){
+                            case 'number':
+                                return compareNumber(a[index], b[index])
+                            case 'string':
+                                return compareString(a[index], b[index])
+                            case 'date':
+                                return compareDate(a[index], b[index])
+                            default:
+                                return 0
+                        }
+                    }
+                }
+
+                return arr.sort(compare)
             }
         },
         data: function () {
             return {
+                data: [],
                 currentPage: this.page,
                 searchBy: null,
                 sortBy: null,
-                sortOrder: 'ASC',
-                rawData: []
+                sortOrderDesc: false
             }
         },
         computed: {
             rows: function () {
-                let row = []
+                let rows
                 if (this.searchBy) {
-                    this.currentPage = 1
-                    row = this.rawData.filter(row => {
+                    rows = this.data.filter(row => {
                         for (let id in this.fields) {
-                            if (row[this.fields[id].key] &&
-                                row[this.fields[id].key].toLowerCase().indexOf(this.searchBy) > -1) {
+                            if(row[this.fields[id].key] &&
+                               row[this.fields[id].key].value &&
+                               row[this.fields[id].key].value.toString().toLowerCase().indexOf(this.searchBy.toString().toLowerCase()) > -1){
                                 return row
                             }
                         }
                     })
                 }
                 else{
-                    row = this.rawData
+                    rows = this.data
                 }
 
-                if(this.sortBy){
-                    row = quickSort(row, this.sortBy, this.sortOrder)
-//                    if(this.sortOrder === 'DESC'){
-//                        let tmp = row.reverse()
-//                        row = row.reverse()
-//                    }
+                if (this.sortBy) {
+                    rows = this.mySort(rows, this.sortBy, this.sortOrderDesc)
                 }
 
-                return (row) ? row : this.rawData
+                return rows
             },
             paginatedRows: function () {
                 let startIndex = (this.currentPage - 1) * this.perPage
@@ -269,22 +254,52 @@
                 if (this.currentPage < 1)
                     this.currentPage = 1
             },
+            searchBy: function(){
+                this.currentPage = 1
+            },
             'sortBy': function () {
-                this.sortOrder = 'ASC'
-            }
-        },
-        /*
-        filters: {
-            capitalize: function (val) {
-                if (val)
-                    return val.toString().charAt(0).toUpperCase() + val.slice(1)
-                return ''
+                this.sortOrderDesc = false
             }
         }
-        */
     }
 </script>
 
 <style>
-
+    .search .left,
+    .search .right{
+        float: right;
+    }
+    .search .right i {
+        margin-top: 6px;
+        font-size: 16px;
+    }
+    .search .right a {
+        z-index: 99;
+    }
+    .fclear{
+        clear: both;
+    }
+    audio{
+        height: 30px;
+        min-width: 180px;
+    }
+    .uk-table th{
+        font-size: .9em;
+    }
+    .uk-table td{
+        vertical-align: middle;
+    }
+    img{
+        max-width: 250px;
+    }
+    img:hover{
+        transform: scale(3);
+    }
+    .img-wrapp{
+        width: 100%;
+        text-align: center;
+    }
+    .img-wrapp i{
+        color: #8a8a8a;
+    }
 </style>

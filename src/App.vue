@@ -14,7 +14,7 @@ export default {
   data: function() {
     return {
         fields: [
-            {key: 'date', type: 'date', format:'dd.mm.yyyy', title: 'Date'},
+            {key: 'date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
             {key: 'user', type: 'string', title: 'User'},
             {key: 'orderno', type: 'number', title: 'Order no'}
         ],
