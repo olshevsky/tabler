@@ -6,7 +6,7 @@
             </div>
             <div class="left">
                 <form class="uk-search">
-                    <input v-model="searchBy" class="uk-search-field" type="search" placeholder="Search by"/>
+                    <input v-model="searchBy" class="uk-search-field" type="search" :placeholder="trans.searchBy"/>
                 </form>
             </div>
             <div class="fclear"></div>
@@ -34,6 +34,9 @@
                 </tr>
             </tbody>
         </table>
+        <div>
+            {{trans.perPage}}:  {{ perPage }}  {{trans.results}}: 231 | {{trans.pages}}: {{ totalPages }}
+        </div>
         <ul class="uk-pagination">
             <li>
                 <a href="#" @click="firstPage()">
@@ -75,33 +78,42 @@
         },
         props: {
             url: {type: String},
-            json: {type: Array, default: () => {return []}},
+            json: {type: Array, default: () => {return null}},
             fields: {type: Array, default: () => {return []}},
             perPage: {type: Number, default: 3},
             page: {type: Number, default: 1},
-            tableClass: {type: String, default: 'uk-table uk-table-striped'},
+            tableClass: {type: String, default: 'uk-table uk-table-hover'},
             caption: {type: String, default: null},
             trans: {type: Object, default: () => {
                 return {
                     noImage: 'no image',
-                    noAudio: 'no audio'
+                    noAudio: 'no audio',
+                    perPage: 'На страницу',
+                    pages: 'Страниц',
+                    results: 'Результатов',
+                    searchBy: 'Поиск'
                 }
             }}
         },
         created: function () {
-            let rawData = (!this.json && this.url) ? rawData = this.fetchData() : this.json
-            let data = []
-            for(let i in rawData){
-                let row = {}
-                for(let j in this.fields){
-                    row[this.fields[j].key] = JSON.parse(JSON.stringify(this.fields[j]))
-                    row[this.fields[j].key].value = rawData[i][ this.fields[j].key]
-                }
-                data.push(row)
-            }
-            this.data = data
+            if(!this.json && this.url)
+                this.fetchData()
+            else
+                this.data = this.parseData(this.json)
         },
         methods: {
+            parseData: function(rawData){
+                let data = []
+                for(let i in rawData){
+                    let row = {}
+                    for(let j in this.fields){
+                        row[this.fields[j].key] = JSON.parse(JSON.stringify(this.fields[j]))
+                        row[this.fields[j].key].value = rawData[i][ this.fields[j].key]
+                    }
+                    data.push(row)
+                }
+                return data
+            },
             onButtonClick: function (field) {
                 this.$emit('clicked', field)
             },
@@ -109,12 +121,10 @@
                 this.$emit('checked', field)
             },
             fetchData: function () {
-                this.$http.get(this.url).then(response => {
-                    console.log(response)
-                }, response => {
-                    console.log(response)
+                this.$http.get(this.url).then(function(response){
+                    if(response.ok)
+                        this.data = this.parseData(response.body)
                 })
-                return []
             },
             nextPage: function () {
                 if (this.currentPage < this.totalPages)
@@ -282,7 +292,12 @@
     }
 </script>
 
-<style>
+<style lang="scss">
+
+    @import '../uikit/css/uikit.almost-flat.css';
+    @import '../uikit/css/components/form-advanced.css';
+    @import '../uikit/css/components/search.almost-flat.min.css';
+
     .search .left,
     .search .right{
         float: right;

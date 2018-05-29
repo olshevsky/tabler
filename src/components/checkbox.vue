@@ -1,6 +1,8 @@
 <template>
-    <input v-if="isChecked" checked :class="checkboxClass" type="checkbox" @click="checked"/>
-    <input v-else :class="checkboxClass" type="checkbox" @click="checked" />
+    <div class="uk-form">
+        <input v-if="isChecked" checked :class="checkboxClass" type="checkbox" @click="checked"/>
+        <input v-else :class="checkboxClass" type="checkbox" @click="checked" />
+    </div>
 </template>
 
 <script>
