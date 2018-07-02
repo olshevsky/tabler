@@ -29,6 +29,7 @@
                     <td v-for="field in row">
                         <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
                         <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
+                        <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
                         <div v-else v-html="renderField(field)"></div>
                     </td>
                 </tr>
@@ -72,12 +73,14 @@
 
     import Button from './button.vue'
     import Checkbox from './checkbox.vue'
+    import Download from './download.vue'
 
     export default{
         name: "tabler",
         components: {
             'v-button': Button,
-            'v-checkbox': Checkbox
+            'v-checkbox': Checkbox,
+            'v-download': Download
         },
         props: {
             url: {type: String},
@@ -164,9 +167,14 @@
                         return this.renderImg(field)
                     case 'audio':
                         return this.renderAudio(field)
+                    case 'url':
+                        return '<a href="'+field+'">'+field.value+'</a>'
                     default:
                         return field.value
                 }
+            },
+            renderLink(){
+
             },
             renderImg(field){
                 let width = (field.width) ? field.width : "auto"
