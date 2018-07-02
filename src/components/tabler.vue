@@ -16,8 +16,11 @@
             <thead>
                 <tr>
                     <th v-for="field in fields">
-                        <a v-if="sortBy == field.key" href="#" @click="sort(field.key)">{{field.title}} <i :class="{ 'uk-icon-sort-amount-asc': (!sortOrderDesc), 'uk-icon-sort-amount-desc': (sortOrderDesc) }"></i></a>
-                        <a v-else @click="sort(field.key)">{{field.title}} <i class="uk-icon-sort"></i></a>
+                        <div v-if="field.sortable">
+                            <a v-if="sortBy == field.key" href="#" @click="sort(field.key)">{{field.title}} <i :class="{ 'uk-icon-sort-amount-asc': (!sortOrderDesc), 'uk-icon-sort-amount-desc': (sortOrderDesc) }"></i></a>
+                            <a v-else @click="sort(field.key)">{{field.title}} <i class="uk-icon-sort"></i></a>
+                        </div>
+                        <span v-else class="column-title">{{field.title}}</span>
                     </th>
                 </tr>
             </thead>
@@ -35,7 +38,7 @@
             </tbody>
         </table>
         <div>
-            {{trans.perPage}}:  {{ perPage }}  {{trans.results}}: 231 | {{trans.pages}}: {{ totalPages }}
+            {{trans.perPage}}:  {{ perPage }}  {{trans.results}}: {{rows.length}} | {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }}
         </div>
         <ul class="uk-pagination">
             <li>
@@ -89,7 +92,8 @@
                     noImage: 'no image',
                     noAudio: 'no audio',
                     perPage: 'На страницу',
-                    pages: 'Страниц',
+                    page: 'Страница',
+                    from: 'из',
                     results: 'Результатов',
                     searchBy: 'Поиск'
                 }
@@ -98,8 +102,6 @@
         created: function () {
             if(!this.json && this.url)
                 this.fetchData()
-            else
-                this.data = this.parseData(this.json)
         },
         methods: {
             parseData: function(rawData){
@@ -236,7 +238,6 @@
         },
         data: function () {
             return {
-                data: [],
                 currentPage: this.page,
                 searchBy: null,
                 sortBy: null,
@@ -244,6 +245,9 @@
             }
         },
         computed: {
+            data: function(){
+                return this.parseData(this.json)
+            },
             rows: function () {
                 let rows
                 if (this.searchBy) {
@@ -251,7 +255,7 @@
                         for (let id in this.fields) {
                             if(row[this.fields[id].key] &&
                                row[this.fields[id].key].value &&
-                               row[this.fields[id].key].value.toString().toLowerCase().indexOf(this.searchBy.toString().toLowerCase()) > -1){
+                               row[this.fields[id].key].value.toString().toLowerCase().replace(/ /g, '').indexOf(this.searchBy.toString().toLowerCase().replace(/ /g, '')) > -1){
                                 return row
                             }
                         }
@@ -334,5 +338,8 @@
     }
     .img-wrapp i{
         color: #8a8a8a;
+    }
+    .column-title{
+        color: #07D;
     }
 </style>

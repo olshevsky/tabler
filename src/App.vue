@@ -16,7 +16,7 @@ export default {
         fields: [
             {key: 'date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
             {key: 'user', type: 'string', title: 'User'},
-            {key: 'orderno', type: 'number', title: 'Order no'}
+            {key: 'orderno', type: 'number', title: 'Order no', sortable: true, styles: {"max-width": "max-width: 100px"}}
         ],
         json: [
           {date: '12.08.1999', user: 'admin', orderno: '1234'},

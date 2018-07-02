@@ -1,3 +1,3 @@
 # build
 
-vue build --target wc --name v-tabler ./src/Tabler.vue
+vue build --target lib --name tabler tabler.vue
