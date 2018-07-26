@@ -43,25 +43,26 @@
         </div>
         <ul class="uk-pagination">
             <li>
-                <a href="#" @click="firstPage()">
+                <a @click="firstPage()">
                     <i class="uk-icon-angle-double-left"></i>
                 </a>
             </li>
             <li>
-                <a href="#" @click="prevPage()">
+                <a @click="prevPage()">
                     <i class="uk-icon-angle-left"></i>
                 </a>
             </li>
             <li v-for="n in this.totalPages" :class="{ 'uk-active': (n == currentPage) }">
-                <a @click="toPage(n)">{{n}}</a>
+                <span v-if="n == currentPage" @click="toPage(n)">{{n}}</span>
+                <a v-else @click="toPage(n)">{{n}}</a>
             </li>
             <li>
-                <a href="#" @click="nextPage()">
+                <a @click="nextPage()">
                     <i class="uk-icon-angle-right"></i>
                 </a>
             </li>
             <li>
-                <a href="#" @click="lastPage()">
+                <a @click="lastPage()">
                     <i class="uk-icon-angle-double-right"></i>
                 </a>
             </li>
@@ -98,7 +99,8 @@
                     page: 'Страница',
                     from: 'из',
                     results: 'Результатов',
-                    searchBy: 'Поиск'
+                    searchBy: 'Поиск',
+                    filters: 'Фильтры'
                 }
             }}
         },
