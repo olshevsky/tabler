@@ -1,29 +1,40 @@
 <template>
   <div id="app">
-    <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick"></tabler>
+    <div class="wrapp">
+      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="5" @clicked="onButtonClick"></tabler>
+    </div>
   </div>
 </template>
 
 <script>
 
 import Tabler from './components/tabler.vue'
-import VueResource from 'vue-resource'
+//import VueResource from 'vue-resource'
 
 export default {
   name: 'app',
   data: function() {
     return {
         fields: [
+            {key: 'ch', type: 'checkbox', title: 'Актывный', thClass: 'uk-text-center', tdClass: 'uk-text-center'},
             {key: 'date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
             {key: 'user', type: 'string', title: 'User'},
             {key: 'orderno', type: 'number', title: 'Order no', sortable: true, styles: {"max-width": "max-width: 100px"}},
-            {key: 'href', type: 'download', title: 'Download'},
+            {key: 'href', type: 'download', title: 'Download', thClass: 'uk-text-center', tdClass: 'uk-text-center'},
         ],
         json: [
-          {date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
-          {date: '13.08.1999', user: 'user', orderno: '3123'},
-          {date: '14.08.1999', user: 'admin', orderno: '415'},
-          {date: '15.08.1999', user: 'user', orderno: '412412'}
+            {ch: '1', date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
+            {ch: '2', date: '13.08.1999', user: 'user', orderno: '3123'},
+            {ch: '3', date: '14.08.1999', user: 'admin', orderno: '415'},
+            {ch: '4', date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
+            {ch: '5', date: '13.08.1999', user: 'user', orderno: '3123'},
+            {ch: '6', date: '14.08.1999', user: 'admin', orderno: '415'},
+            {ch: '7', date: '15.08.1999', user: 'user', orderno: '412412'},
+            {ch: '8', date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
+            {ch: '9', date: '13.08.1999', user: 'user', orderno: '3123'},
+            {ch: '10', date: '14.08.1999', user: 'admin', orderno: '415'},
+            {ch: '11', date: '15.08.1999', user: 'user', orderno: '412412'},
+            {ch: '12', date: '15.08.1999', user: 'user', orderno: '412412'},
         ]
     }
   },
@@ -39,6 +50,11 @@ export default {
 </script>
 
 <style>
+  .wrapp{
+    width: 800px;
+    padding-top: 50px;
+    margin: 0 auto;
+  }
   .fleft{
     float: left;
   }

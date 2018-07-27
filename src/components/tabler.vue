@@ -1,36 +1,57 @@
 <template>
     <div>
         <div class="search">
+            <div v-if="displayFilters">
+                <a><i class="uk-icon-filter"></i></a>
+            </div>
             <div class="right">
-                <a href="#" v-on:click="clearSearch()"><i class="uk-icon-trash"></i></a>
+                <a href="#" v-on:click="clearSearch()">
+                    <i class="uk-icon-trash"></i>
+                </a>
             </div>
             <div class="left">
                 <form class="uk-search">
-                    <input v-model="searchBy" class="uk-search-field" type="search" :placeholder="trans.searchBy"/>
+                    <input v-model="searchBy"
+                           class="uk-search-field"
+                           type="search"
+                           :placeholder="trans.searchBy"/>
                 </form>
             </div>
             <div class="fclear"></div>
         </div>
         <table :class="tableClass">
-            <caption v-if="caption">{{caption}}</caption>
+            <caption v-if="caption">
+                {{caption}}
+            </caption>
             <thead>
                 <tr>
-                    <th v-for="field in fields">
-                        <div v-if="field.sortable">
-                            <a v-if="sortBy == field.key" href="#" @click="sort(field.key)">{{field.title}} <i :class="{ 'uk-icon-sort-amount-asc': (!sortOrderDesc), 'uk-icon-sort-amount-desc': (sortOrderDesc) }"></i></a>
-                            <a v-else @click="sort(field.key)">{{field.title}} <i class="uk-icon-sort"></i></a>
-                        </div>
-                        <span v-else class="column-title">{{field.title}}</span>
+                    <th v-for="field in fields"
+                        :key="field.key"
+                        :class="(field.thClass) ? field.thClass : ''">
+                            <div v-if="field.sortable">
+                                <a v-if="sortBy == field.key"
+                                   @click="sort(field.key)">
+                                    {{field.title}}
+                                    <i :class="{ 'uk-icon-sort-amount-asc': (!sortOrderDesc), 'uk-icon-sort-amount-desc': (sortOrderDesc) }"></i>
+                                </a>
+                                <a v-else
+                                   @click="sort(field.key)">{{field.title}}
+                                    <i class="uk-icon-sort"></i>
+                                </a>
+                            </div>
+                            <span v-else class="column-title">{{field.title}}</span>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="paginatedRows" v-for="row in paginatedRows">
-                    <td v-for="field in row">
-                        <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
-                        <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
-                        <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
-                        <div v-else v-html="renderField(field)"></div>
+                <tr v-if="paginatedRows" v-for="(row, index) in paginatedRows" :key="index" >
+                    <td v-for="field in row"
+                        :key="field.key"
+                        :class="(field.thClass) ? field.thClass : ''">
+                            <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
+                            <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
+                            <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
+                            <div v-else v-html="renderField(field)"></div>
                     </td>
                 </tr>
                 <tr v-else="">
@@ -39,7 +60,18 @@
             </tbody>
         </table>
         <div>
-            {{trans.perPage}}:  {{ perPage }}  {{trans.results}}: {{rows.length}} | {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }}
+            <div class="uk-form">
+                {{ trans.perPage }}:
+                <select v-bind="perPageOptions" v-model="displayOnPage">
+                    <option v-for="option in perPageOptions"
+                            :key="option"
+                            :selected="option == displayOnPage ? 'selected' : ''"
+                            :value="option">
+                        {{option}}
+                    </option>
+                </select>
+                &nbsp; | &nbsp; {{trans.results}}: {{rows.length}} &nbsp; | &nbsp;  {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }}
+            </div>
         </div>
         <ul class="uk-pagination">
             <li>
@@ -52,7 +84,7 @@
                     <i class="uk-icon-angle-left"></i>
                 </a>
             </li>
-            <li v-for="n in this.totalPages" :class="{ 'uk-active': (n == currentPage) }">
+            <li v-for="n in this.totalPages" :key="n" :class="{ 'uk-active': (n == currentPage) }">
                 <span v-if="n == currentPage" @click="toPage(n)">{{n}}</span>
                 <a v-else @click="toPage(n)">{{n}}</a>
             </li>
@@ -84,14 +116,15 @@
             'v-download': Download
         },
         props: {
-            url: {type: String},
-            json: {type: Array, default: () => {return null}},
-            fields: {type: Array, default: () => {return []}},
-            perPage: {type: Number, default: 3},
-            page: {type: Number, default: 1},
-            tableClass: {type: String, default: 'uk-table uk-table-hover'},
-            caption: {type: String, default: null},
-            trans: {type: Object, default: () => {
+            url: { type: String},
+            json: { type: Array, default: () => {return null}},
+            fields: { type: Array, default: () => {return []}},
+            perPage: { type: Number, default: 3},
+            page: { type: Number, default: 1},
+            tableClass: { type: String, default: 'uk-table uk-table-hover'},
+            caption: { type: String, default: null},
+            showFilters: { type: Boolean, default: true},
+            trans: { type: Object, default: () => {
                 return {
                     noImage: 'no image',
                     noAudio: 'no audio',
@@ -125,7 +158,14 @@
                 this.$emit('clicked', field)
             },
             onChecked: function(field){
-                this.$emit('checked', field)
+                this.syncCheckbox(field)
+                this.$emit('checked', {
+                    'field': field,
+                    'fields': this.checked
+                })
+            },
+            syncCheckbox: function (field) {
+                this.checked.push(field)
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -174,9 +214,6 @@
                     default:
                         return field.value
                 }
-            },
-            renderLink(){
-
             },
             renderImg(field){
                 let width = (field.width) ? field.width : "auto"
@@ -244,14 +281,17 @@
 
                 return arr.sort(compare)
             },
-
         },
         data: function () {
             return {
                 currentPage: this.page,
                 searchBy: null,
                 sortBy: null,
-                sortOrderDesc: false
+                sortOrderDesc: false,
+                displayOnPage: this.perPage,
+                perPageOptions: [5, 10, 15, 25, 50, 100],
+                checked: [],
+                displayFilters: this.showFilters
             }
         },
         computed: {
@@ -282,11 +322,11 @@
                 return rows
             },
             paginatedRows: function () {
-                let startIndex = (this.currentPage - 1) * this.perPage
-                return (this.rows && this.rows.length > 0) ? this.rows.slice(startIndex, startIndex + this.perPage) : []
+                let startIndex = (this.currentPage - 1) * this.displayOnPage
+                return (this.rows && this.rows.length > 0) ? this.rows.slice(startIndex, startIndex + this.displayOnPage) : []
             },
             totalPages: function () {
-                return (this.rows) ? Math.ceil(this.rows.length / this.perPage) : 1
+                return (this.rows) ? Math.ceil(this.rows.length / this.displayOnPage) : 1
             }
         },
         watch: {
@@ -301,6 +341,9 @@
             },
             'sortBy': function () {
                 this.sortOrderDesc = false
+            },
+            'displayOnPage': function(){
+                this.currentPage = 1
             }
         }
     }
