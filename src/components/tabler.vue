@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="search">
-            <div v-if="displayFilters">
+            <div v-if="propFilters">
                 <a><i class="uk-icon-filter"></i></a>
             </div>
             <div class="right">
-                <a href="#" v-on:click="clearSearch()">
+                <a v-on:click="clearSearch()">
                     <i class="uk-icon-trash"></i>
                 </a>
             </div>
@@ -39,7 +39,9 @@
                                     <i class="uk-icon-sort"></i>
                                 </a>
                             </div>
-                            <span v-else class="column-title">{{field.title}}</span>
+                            <span v-else class="column-title">
+                                {{field.title}}
+                            </span>
                     </th>
                 </tr>
             </thead>
@@ -47,7 +49,7 @@
                 <tr v-if="paginatedRows" v-for="(row, index) in paginatedRows" :key="index" >
                     <td v-for="field in row"
                         :key="field.key"
-                        :class="(field.thClass) ? field.thClass : ''">
+                        :class="(field.tdClass) ? field.tdClass : ''">
                             <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
                             <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
                             <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
@@ -58,6 +60,15 @@
                     <td>no data</td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td v-for="field in fields" :key="field.key" :class="(field.tdClass) ? field.tdClass : ''">
+                        <div class="uk-form" v-if="field.type === 'checkbox'">
+                            <input class="uk-checkbox" type="checkbox" @click="mark(field.key)"/>
+                        </div>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
         <div>
             <div class="uk-form">
@@ -84,9 +95,13 @@
                     <i class="uk-icon-angle-left"></i>
                 </a>
             </li>
-            <li v-for="n in this.totalPages" :key="n" :class="{ 'uk-active': (n == currentPage) }">
-                <span v-if="n == currentPage" @click="toPage(n)">{{n}}</span>
-                <a v-else @click="toPage(n)">{{n}}</a>
+            <li v-for="n in this.totalPages"
+                :key="n"
+                :class="{ 'uk-active': (n == currentPage) }">
+                    <span v-if="n == currentPage"
+                          @click="toPage(n)">{{n}}
+                    </span>
+                    <a v-else @click="toPage(n)">{{n}}</a>
             </li>
             <li>
                 <a @click="nextPage()">
@@ -123,7 +138,7 @@
             page: { type: Number, default: 1},
             tableClass: { type: String, default: 'uk-table uk-table-hover'},
             caption: { type: String, default: null},
-            showFilters: { type: Boolean, default: true},
+            showFilters: { type: Boolean, default: false},
             trans: { type: Object, default: () => {
                 return {
                     noImage: 'no image',
@@ -137,20 +152,46 @@
                 }
             }}
         },
+        data: function () {
+            return {
+                currentPage: this.page,
+                searchBy: null,
+                sortBy: null,
+                sortOrderDesc: false,
+                displayOnPage: this.perPage,
+                perPageOptions: [5, 10, 15, 25, 50, 100],
+                propFilters: this.showFilters,
+                data: this.parseData(this.json)
+            }
+        },
         created: function () {
             if(!this.json && this.url)
                 this.fetchData()
         },
         methods: {
+            mark: function (key) {
+                for(let i in this.paginatedRows){
+                    let index = parseInt(this.paginatedRows[i][key].rowIndex)
+                    this.data[index][key].checked = true;
+                    console.log(this.data[index][key].checked)
+                }
+            },
             parseData: function(rawData){
                 let data = []
                 for(let i in rawData){
                     let row = {}
                     for(let j in this.fields){
                         row[this.fields[j].key] = JSON.parse(JSON.stringify(this.fields[j]))
-                        row[this.fields[j].key].value = rawData[i][ this.fields[j].key]
+                        if(typeof rawData[i][this.fields[j].key] === 'string'){
+                            row[this.fields[j].key].value = rawData[i][this.fields[j].key]
+                        }
+                        else if(rawData[i][this.fields[j].key]){
+                            let values = JSON.parse(JSON.stringify(rawData[i][this.fields[j].key]))
+                            Object.assign(row[this.fields[j].key], values)
+                        }
+                        row[this.fields[j].key].rowIndex = i
                     }
-                    data.push(row)
+                    data[i] = row
                 }
                 return data
             },
@@ -158,14 +199,44 @@
                 this.$emit('clicked', field)
             },
             onChecked: function(field){
-                this.syncCheckbox(field)
+                let key = field.key
+                let rowIndex = field.rowIndex
+                this.data[rowIndex][key].checked = field.checked
+
+                let onPage = []
+                for(let i in this.paginatedRows){
+                    if(this.paginatedRows[i][key].checked)
+                        onPage.push(this.paginatedRows[i][key].value)
+                }
+
+                let total = []
+                for(let i in this.rows){
+                    if(this.rows[i][key].checked)
+                        total.push(this.rows[i][key].value)
+                }
+
+//                let onPage = this.paginatedRows.filter(x => {
+//                    if(x[key].checked)
+//                        return true
+//                    return false
+//                })
+
+//                let total = this.rows.filter(x => {
+//                    if(x[key].checked)
+//                        return true
+//                    return false
+//                })
+
                 this.$emit('checked', {
                     'field': field,
-                    'fields': this.checked
+                    'checkedValue': field.value,
+                    'checkedValuesOnPage': onPage,
+                    'checkedValuesTotal': total
                 })
             },
-            syncCheckbox: function (field) {
-                this.checked.push(field)
+            checkedFields: function(key){
+//                let fields = this.data
+                return key
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -282,22 +353,10 @@
                 return arr.sort(compare)
             },
         },
-        data: function () {
-            return {
-                currentPage: this.page,
-                searchBy: null,
-                sortBy: null,
-                sortOrderDesc: false,
-                displayOnPage: this.perPage,
-                perPageOptions: [5, 10, 15, 25, 50, 100],
-                checked: [],
-                displayFilters: this.showFilters
-            }
-        },
         computed: {
-            data: function(){
-                return this.parseData(this.json)
-            },
+//            data: function(){
+//                return this.parseData(this.json)
+//            },
             rows: function () {
                 let rows
                 if (this.searchBy) {
@@ -378,6 +437,9 @@
     }
     .uk-table td{
         vertical-align: middle;
+    }
+    .uk-table tfoot td{
+        border: none;
     }
     img{
         max-width: 250px;
