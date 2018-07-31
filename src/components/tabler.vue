@@ -84,7 +84,7 @@
                     <i class="uk-icon-angle-left"></i>
                 </a>
             </li>
-            <li v-for="n in this.totalPages" :key="n" :class="{ 'uk-active': (n == currentPage) }">
+            <li v-for="n in pagination" :key="n" :class="{ 'uk-active': (n == currentPage) }">
                 <span v-if="n == currentPage" @click="toPage(n)">{{n}}</span>
                 <a v-else @click="toPage(n)">{{n}}</a>
             </li>
@@ -327,6 +327,16 @@
             },
             totalPages: function () {
                 return (this.rows) ? Math.ceil(this.rows.length / this.displayOnPage) : 1
+            },
+            pagination: function() {
+                let startIndex = this.currentPage - 3
+                    startIndex = (startIndex < 1) ? 1 : startIndex
+                let endIndex = this.currentPage + 3
+                    endIndex = (endIndex > this.totalPages) ? this.totalPages : endIndex
+                const range = (start, end) => ( Array.from(Array(end - start + 1).keys()).map(i => i + start))
+                let result = range(startIndex, endIndex)
+
+                return result
             }
         },
         watch: {
