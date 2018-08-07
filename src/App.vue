@@ -11,22 +11,27 @@
 import Tabler from './components/tabler.vue'
 //import VueResource from 'vue-resource'
 
+//var json = []
+//for(var i = 0; i < 100; i++){
+//  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'})
+//}
+
 export default {
   name: 'app',
   data: function() {
     return {
         fields: [
-            {key: 'ch', type: 'checkbox', title: 'Актывный', thClass: 'uk-text-center', tdClass: 'uk-text-center'},
+            {key: 'ch', type: 'checkbox', title: 'Актывный', thClass: 'uk-text-center', tdClass: 'uk-text-center', checked: false},
             {key: 'date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
             {key: 'user', type: 'string', title: 'User'},
             {key: 'orderno', type: 'number', title: 'Order no', sortable: true, styles: {"max-width": "max-width: 100px"}},
             {key: 'href', type: 'download', title: 'Download', thClass: 'uk-text-center', tdClass: 'uk-text-center'},
         ],
         json: [
-            {ch: '1', date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
-            {ch: '2', date: '13.08.1999', user: 'user', orderno: '3123'},
-            {ch: '3', date: '14.08.1999', user: 'admin', orderno: '415'},
-            {ch: '4', date: '12.08.1999', user: 'admin', orderno: '1234', href: 'dasd'},
+            {ch: { value: '1', checked: true }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'},
+            {ch: '2', date: '13.08.1999', user: 'use2', orderno: '3123'},
+            {ch: '3', date: '14.08.1999', user: 'admin3', orderno: '415'},
+            {ch: '4', date: '12.08.1999', user: 'admin4', orderno: '1234', href: 'dasd'},
             {ch: '5', date: '13.08.1999', user: 'user', orderno: '3123'},
             {ch: '6', date: '14.08.1999', user: 'admin', orderno: '415'},
             {ch: '7', date: '15.08.1999', user: 'user', orderno: '412412'},
