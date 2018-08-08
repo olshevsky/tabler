@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapp">
-      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="5" @clicked="onButtonClick"></tabler>
+      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="5" @clicked="onButtonClick" :show-filters="true"></tabler>
     </div>
   </div>
 </template>
@@ -12,7 +12,7 @@ import Tabler from './components/tabler.vue'
 //import VueResource from 'vue-resource'
 
 //var json = []
-//for(var i = 0; i < 100; i++){
+//for(let i = 0; i < 100; i++){
 //  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'})
 //}
 
@@ -21,11 +21,42 @@ export default {
   data: function() {
     return {
         fields: [
-            {key: 'ch', type: 'checkbox', title: 'Актывный', thClass: 'uk-text-center', tdClass: 'uk-text-center', checked: false},
-            {key: 'date', type: 'date', format: 'dd.mm.yyyy', title: 'Date'},
-            {key: 'user', type: 'string', title: 'User'},
-            {key: 'orderno', type: 'number', title: 'Order no', sortable: true, styles: {"max-width": "max-width: 100px"}},
-            {key: 'href', type: 'download', title: 'Download', thClass: 'uk-text-center', tdClass: 'uk-text-center'},
+            {
+                key: 'ch',
+                type: 'checkbox',
+                title: 'Актывный',
+                thClass: 'uk-text-center',
+                tdClass: 'uk-text-center',
+                checked: false
+            },
+            {
+                key: 'date',
+                type: 'date',
+                title: 'Дата',
+                format: 'dd.mm.yyyy',
+                filterable: true
+            },
+            {
+                key: 'user',
+                type: 'string',
+                title: 'Пользователь',
+                filterable: true
+            },
+            {
+                key: 'orderno',
+                type: 'number',
+                title: 'Номер заказа',
+                sortable: true,
+                filterable: true,
+                styles: {"max-width": "max-width: 100px"}
+            },
+            {
+                key: 'href',
+                type: 'download',
+                title: 'Скачать',
+                thClass: 'uk-text-center',
+                tdClass: 'uk-text-center'
+            },
         ],
         json: [
             {ch: { value: '1', checked: true }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'},

@@ -1,9 +1,9 @@
 <template>
     <div>
+        <div v-if="propFilters">
+            <v-filters :fields="fields"></v-filters>
+        </div>
         <div class="search">
-            <div v-if="propFilters">
-                <a><i class="uk-icon-filter"></i></a>
-            </div>
             <div class="right">
                 <a v-on:click="clearSearch()">
                     <i class="uk-icon-trash"></i>
@@ -118,13 +118,15 @@
     import Button from './button.vue'
     import Checkbox from './checkbox.vue'
     import Download from './download.vue'
+    import Filters from './filters.vue';
 
     export default{
         name: "tabler",
         components: {
             'v-button': Button,
             'v-checkbox': Checkbox,
-            'v-download': Download
+            'v-download': Download,
+            'v-filters': Filters
         },
         props: {
             url: { type: String},
