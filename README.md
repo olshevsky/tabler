@@ -8,4 +8,5 @@ vue build --target lib --name tabler tabler.vue
 
 # Run demo app
 cd ./src
+
 vue serve
