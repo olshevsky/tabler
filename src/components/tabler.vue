@@ -119,6 +119,8 @@
     import Checkbox from './checkbox.vue'
     import Download from './download.vue'
     import Filters from './filters.vue';
+    import FieldCompare from '../lib/field-compare.js'
+    // import {_} from 'underscore';
 
     export default{
         name: "tabler",
@@ -216,6 +218,7 @@
                     }
                     data[i] = row
                 }
+
                 return data
             },
             onButtonClick: function (field) {
@@ -247,8 +250,9 @@
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
-                    if(response.ok)
+                    if(response.ok){
                         this.data = this.parseData(response.body)
+                    }
                 })
             },
             nextPage: function () {
@@ -312,74 +316,34 @@
                     return this.trans.noAudio
             },
             mySort(data, index, desc) {
-                let arr = JSON.parse(JSON.stringify(data))
-                function compareNumber(a, b) {
-                    return (desc) ? Number(b.value) - Number(a.value) : Number(a.value) - Number(b.value)
-                }
-                function compareString(a, b) {
-                    return (desc) ? b.value.localeCompare(a.value) : a.value.localeCompare(b.value)
-                }
-                function compareDate(a, b) {
-                    return (desc) ? strToDate(b.value, b.format) - strToDate(a.value, a.format) : strToDate(a.value, a.format) - strToDate(b.value, b.format)
-                }
-                function strToDate(val, format) {
-                    let normalized = val.replace(/[^a-zA-Z0-9]/g, '-')
-                    let normalizedFormat = format.toLowerCase().replace(/[^a-zA-Z0-9]/g, '-')
-                    let formatItems = normalizedFormat.split('-')
-                    let dateItems = normalized.split('-')
-                    let monthIndex  = formatItems.indexOf("mm")
-                    let dayIndex    = formatItems.indexOf("dd")
-                    let yearIndex   = formatItems.indexOf("yyyy")
-                    let hourIndex     = formatItems.indexOf("hh")
-                    let minutesIndex  = formatItems.indexOf("ii")
-                    let secondsIndex  = formatItems.indexOf("ss")
-                    let today = new Date()
-                    let year  = yearIndex > -1  ? dateItems[yearIndex]    : today.getFullYear()
-                    let month = monthIndex > -1 ? dateItems[monthIndex] - 1 : today.getMonth() - 1
-                    let day   = dayIndex > -1   ? dateItems[dayIndex]     : today.getDate()
-                    let hour    = hourIndex > -1      ? dateItems[hourIndex]    : today.getHours()
-                    let minute  = minutesIndex > - 1   ? dateItems[minutesIndex] : today.getMinutes()
-                    let second  = secondsIndex > -1   ? dateItems[secondsIndex] : today.getSeconds()
-                    return new Date(year,month,day,hour,minute,second)
-                }
-                function compare(a, b){
-                    if(a[index] && b[index]){
-                        switch (a[index].type){
-                            case 'number':
-                                return compareNumber(a[index], b[index])
-                            case 'string':
-                                return compareString(a[index], b[index])
-                            case 'date':
-                                return compareDate(a[index], b[index])
-                            default:
-                                return 0
-                        }
-                    }
-                }
-
-                return arr.sort(compare)
+                let arr = JSON.parse(JSON.stringify(data)).sort(FieldCompare.sort(index))
+                return (desc) ? arr : arr.reverse()
             },
         },
         computed: {
-//            data: function(){
-//                return this.parseData(this.json)
-//            },
             rows: function () {
                 let rows
                 if (this.searchBy) {
-                    rows = this.data.filter(row => {
-                        for (let id in this.fields) {
-                            if(row[this.fields[id].key] &&
-                               row[this.fields[id].key].value &&
-                               row[this.fields[id].key].value.toString().toLowerCase().replace(/ /g, '').indexOf(this.searchBy.toString().toLowerCase().replace(/ /g, '')) > -1){
-                                return row
-                            }
-                        }
-                    })
+                    rows = this.data.filter(FieldCompare.search(this.fields, this.searchBy))
                 }
                 else{
                     rows = this.data
                 }
+
+                let filters = [
+                    {
+                        key: 'date',
+                        operator: '=',
+                        value: '12.08.1999'
+                    },
+                    {
+                        key: 'user',
+                        operator: '=',
+                        value: 'admin'
+                    }
+                ]
+
+                rows = rows.filter(FieldCompare.filter(filters))
 
                 if (this.sortBy) {
                     rows = this.mySort(rows, this.sortBy, this.sortOrderDesc)

@@ -25,6 +25,7 @@ export default {
                 key: 'ch',
                 type: 'checkbox',
                 title: 'Актывный',
+                sortable: true,
                 thClass: 'uk-text-center',
                 tdClass: 'uk-text-center',
                 checked: false
@@ -33,6 +34,7 @@ export default {
                 key: 'date',
                 type: 'date',
                 title: 'Дата',
+                sortable: true,
                 format: 'dd.mm.yyyy',
                 filterable: true
             },
@@ -40,6 +42,7 @@ export default {
                 key: 'user',
                 type: 'string',
                 title: 'Пользователь',
+                sortable: true,
                 filterable: true
             },
             {
