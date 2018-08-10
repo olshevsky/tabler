@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="propFilters">
-            <v-filters :fields="fields"></v-filters>
+            <v-filters :fields="fields" @filter="onFilter"></v-filters>
         </div>
         <div class="search">
             <div class="right">
@@ -119,7 +119,7 @@
     import Checkbox from './checkbox.vue'
     import Download from './download.vue'
     import Filters from './filters.vue';
-    import FieldCompare from '../lib/field-compare.js'
+    import Fields from '../lib/fields.js'
     // import {_} from 'underscore';
 
     export default{
@@ -248,6 +248,9 @@
                     'checkedValuesTotal': total
                 })
             },
+            onFilter: function(data){
+                console.log(data)
+            },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
                     if(response.ok){
@@ -316,7 +319,7 @@
                     return this.trans.noAudio
             },
             mySort(data, index, desc) {
-                let arr = JSON.parse(JSON.stringify(data)).sort(FieldCompare.sort(index))
+                let arr = JSON.parse(JSON.stringify(data)).sort(Fields.sort(index))
                 return (desc) ? arr : arr.reverse()
             },
         },
@@ -324,26 +327,32 @@
             rows: function () {
                 let rows
                 if (this.searchBy) {
-                    rows = this.data.filter(FieldCompare.search(this.fields, this.searchBy))
+                    rows = this.data.filter(Fields.search(this.fields, this.searchBy))
                 }
                 else{
                     rows = this.data
                 }
 
-                let filters = [
-                    {
-                        key: 'date',
-                        operator: '=',
-                        value: '12.08.1999'
-                    },
-                    {
-                        key: 'user',
-                        operator: '=',
-                        value: 'admin'
-                    }
-                ]
+//                let filters = [
+//                    {
+//                        key: 'date',
+//                        operator: '>=',
+//                        value: '13.08.1999',
+//                        format: 'dd.mm.yyyy'
+//                    },
+//                    {
+//                        key: 'user',
+//                        operator: '=',
+//                        value: 'use2'
+//                    },
+//                    {
+//                        key: 'orderno',
+//                        operator: '>=',
+//                        value: '3123'
+//                    },
+//                ]
 
-                rows = rows.filter(FieldCompare.filter(filters))
+//                rows = rows.filter(Fields.filter(filters))
 
                 if (this.sortBy) {
                     rows = this.mySort(rows, this.sortBy, this.sortOrderDesc)

@@ -3,7 +3,9 @@
         <div class="uk-form">
             <div v-for="filter in filters" v-bind:key="filter.key">
                 {{filter.title}}
-                <a><i class="uk-icon-filter"></i></a>&nbsp;
+                <a>
+                    <i class="uk-icon-filter"></i>
+                </a>&nbsp;
                 <select>
                     <option v-for="operator in operators"
                             :key="operator"
@@ -12,6 +14,9 @@
                     </option>
                 </select>
                 <input/>
+            </div>
+            <div>
+                <button class="uk-button uk-button-primary" type="button"><i class="uk-icon-filter" @click="filter()"></i></button>
             </div>
         </div>
     </div>
@@ -28,11 +33,12 @@
                 operators: {
                     '=': '=',
                     '!=': '!=',
-                    '<': '<',
                     '>': '>',
-//                    '%LIKE%': '%LIKE%',
-//                    'NULL': 'NULL',
-                }
+                    '<': '<',
+                    '>=': '>=',
+                    '<=': '<=',
+                },
+                filterss: []
             }
         },
         computed: {
@@ -40,6 +46,13 @@
                 return this.fields.filter(f => {
                     return f.filterable
                 })
+            }
+        },
+        methods: {
+            filter: function(){
+                console.log('filter' +
+                    '')
+                this.$emit('filter', {})
             }
         },
         mounted: function () {
