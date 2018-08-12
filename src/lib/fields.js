@@ -66,7 +66,7 @@ export default{
                     default:
                         result = false
                 }
-                if(result === false) //AND
+                if(result === false) //AND, inverse for OR statement
                     break
             }
 

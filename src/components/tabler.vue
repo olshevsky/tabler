@@ -161,6 +161,7 @@
                 displayOnPage: this.perPage,
                 perPageOptions: [5, 10, 15, 25, 50, 100],
                 propFilters: this.showFilters,
+                filters: null,
                 data: this.parseData(this.json)
             }
         },
@@ -249,7 +250,10 @@
                 })
             },
             onFilter: function(data){
+                console.log('onFilter')
                 console.log(data)
+//                this.currentPage = 1
+                this.filters = data
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -333,26 +337,29 @@
                     rows = this.data
                 }
 
-//                let filters = [
-//                    {
+//                let start = performance.now()
+//                let filters = {
+//                    'date': {
 //                        key: 'date',
 //                        operator: '>=',
 //                        value: '13.08.1999',
 //                        format: 'dd.mm.yyyy'
 //                    },
-//                    {
+//                    'user': {
 //                        key: 'user',
 //                        operator: '=',
 //                        value: 'use2'
 //                    },
-//                    {
+//                    'orderno': {
 //                        key: 'orderno',
 //                        operator: '>=',
 //                        value: '3123'
-//                    },
-//                ]
+//                    }
+//                 }
 
-//                rows = rows.filter(Fields.filter(filters))
+                if(this.filters)
+                    rows = rows.filter(Fields.filter(this.filters))
+//                console.log(performance.now() - start)
 
                 if (this.sortBy) {
                     rows = this.mySort(rows, this.sortBy, this.sortOrderDesc)
