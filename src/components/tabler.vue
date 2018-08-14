@@ -81,7 +81,7 @@
                         {{option}}
                     </option>
                 </select>
-                &nbsp; | &nbsp; {{trans.results}}: {{rows.length}} &nbsp; | &nbsp;  {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }}
+                &nbsp; | &nbsp; {{trans.results}}: {{rows.length}} &nbsp; | &nbsp;  {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }} | Перейти на страницу: <input v-model.number="currentPage" type="number">
             </div>
         </div>
         <ul class="uk-pagination">
@@ -249,11 +249,9 @@
                     'checkedValuesTotal': total
                 })
             },
-            onFilter: function(data){
-                console.log('onFilter')
-                console.log(data)
-//                this.currentPage = 1
-                this.filters = data
+            onFilter: function(filters){
+                this.currentPage = 1
+                this.filters = filters
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -357,9 +355,9 @@
 //                    }
 //                 }
 
-                if(this.filters)
+                if(this.filters){
                     rows = rows.filter(Fields.filter(this.filters))
-//                console.log(performance.now() - start)
+                }
 
                 if (this.sortBy) {
                     rows = this.mySort(rows, this.sortBy, this.sortOrderDesc)
