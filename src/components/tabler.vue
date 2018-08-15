@@ -335,26 +335,6 @@
                     rows = this.data
                 }
 
-//                let start = performance.now()
-//                let filters = {
-//                    'date': {
-//                        key: 'date',
-//                        operator: '>=',
-//                        value: '13.08.1999',
-//                        format: 'dd.mm.yyyy'
-//                    },
-//                    'user': {
-//                        key: 'user',
-//                        operator: '=',
-//                        value: 'use2'
-//                    },
-//                    'orderno': {
-//                        key: 'orderno',
-//                        operator: '>=',
-//                        value: '3123'
-//                    }
-//                 }
-
                 if(this.filters){
                     rows = rows.filter(Fields.filter(this.filters))
                 }
@@ -409,6 +389,9 @@
     @import '../uikit/css/components/form-advanced.css';
     @import '../uikit/css/components/search.almost-flat.min.css';
 
+    $primary-blue-color: #00a8e6;
+    $grey-color: #8a8a8a;
+
     .search .left,
     .search .right{
         float: right;
@@ -447,9 +430,9 @@
         text-align: center;
     }
     .img-wrapp i{
-        color: #8a8a8a;
+        color: $grey-color;
     }
     .column-title{
-        color: #07D;
+        color: $primary-blue-color;
     }
 </style>

@@ -1,10 +1,10 @@
 <template>
     <div class="uk-form">
         <i class="uk-icon-filter"></i>
-        <div v-for="filter in filters" v-bind:key="filter.key">
-            {{ filter.title }}
+        <div v-for="field in filtersFields" v-bind:key="field.key">
+            <span>{{ field.title }}</span>
             <select @input="updateFilters({
-                key: filter.key,
+                key: field.key,
                 operator: $event.target.value
             })">
                 <option v-for="operator in operators"
@@ -13,7 +13,10 @@
                     {{ operator }}
                 </option>
             </select>
-            <input @input="updateFilters({key: filter.key, value: $event.target.value})"/>
+            <input @input="updateFilters({key: field.key, value: $event.target.value})"/>
+            <a @click="resetFilter(field.key)">
+                <i class="uk-icon-close"></i>
+            </a>
         </div>
         <div>
             <button @click="applyFilters()" class="uk-button uk-button-primary" type="button"><i class="uk-icon-filter"></i></button>
@@ -48,12 +51,13 @@
         },
         data: function () {
             return {
+                defaultOperator: '=',
                 rawFilters: {},
                 age: 0
             }
         },
         computed: {
-            filters: {
+            filtersFields: {
                 get: function(){
                     return this.fields.filter(field => {
                         return field.filterable
@@ -63,14 +67,10 @@
         },
         methods: {
             applyFilters: function(){
-
                 console.log('applyFilters')
-
                 let rawFilters = JSON.parse(JSON.stringify(this.rawFilters))
                 let filters = []
                 for(let i in rawFilters){
-//                    console.log(rawFilters[i]['value'] !== '')
-//                    console.log(rawFilters[i]['value'] ? true : false)
                     if(rawFilters[i]['operator'] && rawFilters[i]['value'])
                         filters.push(rawFilters[i])
                 }
@@ -78,6 +78,7 @@
             },
             // TODO rewrite this
             updateFilters: function(data){
+                // update
                 if(this.rawFilters[data.key]){
                     if(data.operator && Object.keys(this.operators).indexOf(data.operator) >= 0){
                         this.rawFilters[data.key]['operator'] = data.operator
@@ -86,13 +87,22 @@
                         this.rawFilters[data.key].value = data.value
                     }
                 }
+                // insert
                 else{
                     this.rawFilters[data.key] = data
+                    if(!this.rawFilters[data.key].operator)
+                        this.rawFilters[data.key].operator = this.defaultOperator;
                 }
             },
             resetFilters: function () {
+                console.log('resetFilters')
                 this.rawFilters = {}
                 this.$emit('filter', null)
+            },
+            resetFilter: function (key) {
+                console.log('resetFilter')
+                if(this.rawFilters[key])
+                    delete this.rawFilters[key]
             }
         }
     }
@@ -125,5 +135,8 @@
 </script>
 
 <style lang="scss">
-
+    $primary-blue-color: #00a8e6;
+    .filters{
+        color: $primary-blue-color;
+    }
 </style>

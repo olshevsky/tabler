@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapp">
-      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="5" @clicked="onButtonClick" :show-filters="true"></tabler>
+      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick" :show-filters="true"></tabler>
     </div>
   </div>
 </template>
@@ -11,9 +11,9 @@
 import Tabler from './components/tabler.vue'
 //import VueResource from 'vue-resource'
 
-var json = []
+let json = []
 for(let i = 0; i < 1000; i++){
-  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin1', orderno: ''+i, href: 'dasd'})
+  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: ''+i, href: 'dasd'})
 }
 
 export default {
@@ -36,7 +36,7 @@ export default {
                 title: 'Дата',
                 sortable: true,
                 format: 'dd.mm.yyyy',
-                filterable: true
+                filterable: false,
             },
             {
                 key: 'user',
