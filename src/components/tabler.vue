@@ -392,6 +392,7 @@
     @import '../uikit/css/components/search.almost-flat.min.css';
 
     $primary-blue-color: #00a8e6;
+    $label-blue-color: #07D;
     $grey-color: #8a8a8a;
 
     .search .left,
@@ -435,7 +436,7 @@
         color: $grey-color;
     }
     .column-title{
-        color: $primary-blue-color;
+        color: #07D;
     }
     .pagination-page{
         width: 60px;
