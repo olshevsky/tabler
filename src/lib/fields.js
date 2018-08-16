@@ -6,6 +6,8 @@ export default{
         return b.value.localeCompare(a.value)
     },
     compareDate: function(a, b) {
+        if(!b.format)
+            b.format = a.format
         return this.strToDate(b.value, b.format) - this.strToDate(a.value, a.format)
     },
     compare: function(a, b){

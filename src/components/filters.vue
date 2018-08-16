@@ -6,21 +6,24 @@
             <select @input="updateFilters({
                 key: field.key,
                 operator: $event.target.value
-            })">
+            })" ref="operators">
                 <option v-for="operator in operators"
                         :key="operator"
                         :value="operator">
                     {{ operator }}
                 </option>
             </select>
-            <input @input="updateFilters({key: field.key, value: $event.target.value})"/>
-            <a @click="resetFilter(field.key)">
-                <i class="uk-icon-close"></i>
-            </a>
+            <input @input="updateFilters({key: field.key, value: $event.target.value})" ref="inputs"/>
         </div>
         <div>
-            <button @click="applyFilters()" class="uk-button uk-button-primary" type="button"><i class="uk-icon-filter"></i></button>
-            <button @click="resetFilters()" class="uk-button uk-button-primary" type="button"><i class="uk-icon-trash"></i></button>
+            <button @click="applyFilters()" class="uk-button uk-button-primary" type="button">
+                <span>{{ trans.apply }}&nbsp;</span>
+                <i class="uk-icon-filter"></i>
+            </button>
+            <button @click="resetFilters()" class="uk-button uk-button-primary" type="button">
+                <span>{{ trans.reset }}&nbsp;</span>
+                <i class="uk-icon-trash"></i>
+            </button>
         </div>
     </div>
 </template>
@@ -34,6 +37,9 @@
                 default: () =>{
                     return {}
                 }
+            },
+            trans: {
+                type: Object
             },
             operators: {
                 type: Object,
@@ -91,18 +97,19 @@
                 else{
                     this.rawFilters[data.key] = data
                     if(!this.rawFilters[data.key].operator)
-                        this.rawFilters[data.key].operator = this.defaultOperator;
+                        this.rawFilters[data.key].operator = this.defaultOperator
+
                 }
             },
             resetFilters: function () {
-                console.log('resetFilters')
                 this.rawFilters = {}
+                this.$refs.inputs.forEach( (input) => {
+                    input.value = ''
+                })
+                this.$refs.operators.forEach( (operator) => {
+                    operator.value = this.defaultOperator
+                })
                 this.$emit('filter', null)
-            },
-            resetFilter: function (key) {
-                console.log('resetFilter')
-                if(this.rawFilters[key])
-                    delete this.rawFilters[key]
             }
         }
     }

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-if="propFilters">
-            <v-filters :fields="fields" @filter="onFilter"></v-filters>
+            <v-filters :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
         </div>
         <div class="search">
             <div class="right">
@@ -81,7 +81,7 @@
                         {{option}}
                     </option>
                 </select>
-                &nbsp; | &nbsp; {{trans.results}}: {{rows.length}} &nbsp; | &nbsp;  {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }} | Перейти на страницу: <input v-model.number="currentPage" type="number">
+                &nbsp; | &nbsp; {{trans.results}}: {{rows.length}} &nbsp; | &nbsp;  {{ currentPage }} {{trans.page}} {{trans.from}} {{ totalPages }} | Перейти на страницу: <input v-model.number="currentPage" class="pagination-page" type="number">
             </div>
         </div>
         <ul class="uk-pagination">
@@ -148,7 +148,9 @@
                     from: 'из',
                     results: 'Результатов',
                     searchBy: 'Поиск',
-                    filters: 'Фильтры'
+                    filters: 'Фильтры',
+                    apply: 'Применить',
+                    reset: 'Сбросить'
                 }
             }}
         },
@@ -434,5 +436,8 @@
     }
     .column-title{
         color: $primary-blue-color;
+    }
+    .pagination-page{
+        width: 60px;
     }
 </style>
