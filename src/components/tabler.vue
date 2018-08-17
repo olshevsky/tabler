@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div v-if="propFilters">
-            <v-filters :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
+        <div>
+            <v-toogle :state="propFilters" @change="onDisplayFilters"></v-toogle>
+            <v-filters v-if="propFilters" :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
         </div>
         <div class="search">
             <div class="right">
@@ -119,6 +120,7 @@
     import Checkbox from './checkbox.vue'
     import Download from './download.vue'
     import Filters from './filters.vue';
+    import Toogle from './toogle.vue';
     import Fields from '../lib/fields.js'
     // import {_} from 'underscore';
 
@@ -128,7 +130,8 @@
             'v-button': Button,
             'v-checkbox': Checkbox,
             'v-download': Download,
-            'v-filters': Filters
+            'v-filters': Filters,
+            'v-toogle': Toogle
         },
         props: {
             url: { type: String},
@@ -254,6 +257,9 @@
             onFilter: function(filters){
                 this.currentPage = 1
                 this.filters = filters
+            },
+            onDisplayFilters: function(data){
+                this.propFilters = data
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){

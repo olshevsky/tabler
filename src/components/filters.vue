@@ -1,36 +1,37 @@
 <template>
     <div class="uk-form">
-        <div  v-for="field in filtersFields" v-bind:key="field.key" style="float: left; width: 235px; margin-right: 15px;">
-            <div style="text-align: center; margin-bottom: 5px; color: #07D; font-size: 13px">
-                <strong>{{ field.title }}</strong>
-            </div>
-            <div>
-                <select @input="updateFilters({
+        <div>
+            <div  v-for="field in filtersFields" v-bind:key="field.key" class="filter-box" style="float: left; width: 235px; margin-right: 15px;">
+                <div style="text-align: center; margin-bottom: 5px; color: #07D; font-size: 13px">
+                    <strong>{{ field.title }}</strong>
+                </div>
+                <div>
+                    <select @input="updateFilters({
                 key: field.key,
                 operator: $event.target.value
             })" ref="operators" style="margin-right: 5px;" class="uk-form-small">
-                    <option v-for="operator in operators"
-                            :key="operator"
-                            :value="operator">
-                        {{ operator }}
-                    </option>
-                </select>
-                <div class="uk-form-icon">
-                    <i class="uk-icon-filter "></i>
-                    <input @input="updateFilters({key: field.key, value: $event.target.value})" ref="inputs" type="text" class="uk-form-small">
+                        <option v-for="operator in operators"
+                                :key="operator"
+                                :value="operator">
+                            {{ operator }}
+                        </option>
+                    </select>
+                    <div class="uk-form-icon">
+                        <i class="uk-icon-filter "></i>
+                        <input @input="updateFilters({key: field.key, value: $event.target.value})" ref="inputs" type="text" class="uk-form-small">
+                    </div>
                 </div>
             </div>
+            <div class="fclear"></div>
         </div>
-        <br>
-        <br>
-        <div>
-            <button @click="applyFilters()" class="uk-button uk-button-primary uk-button-small" type="button">
-                <span>{{ trans.apply }}&nbsp;</span>
-                <i class="uk-icon-filter"></i>
-            </button>
+        <div class="filter-buttons" style="margin-top: 10px">
             <button @click="resetFilters()" class="uk-button uk-button-primary uk-button-small" type="button">
                 <span>{{ trans.reset }}&nbsp;</span>
                 <i class="uk-icon-trash"></i>
+            </button>
+            <button @click="applyFilters()" class="uk-button uk-button-primary uk-button-small" type="button">
+                <span>{{ trans.apply }}&nbsp;</span>
+                <i class="uk-icon-filter"></i>
             </button>
         </div>
     </div>
@@ -153,5 +154,11 @@
     $primary-blue-color: #00a8e6;
     .filters{
         color: $primary-blue-color;
+    }
+    .fclear{
+        clear: both;
+    }
+    .filter-buttons button{
+        margin-right: 5px;
     }
 </style>
