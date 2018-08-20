@@ -1,7 +1,7 @@
 <template>
-    <div class="uk-form">
+    <div class="uk-form uk-panel uk-panel-box uk-panel-box-primary uk-margin-bottom">
         <div>
-            <div  v-for="field in filtersFields" v-bind:key="field.key" class="filter-box" style="float: left; width: 230px; margin: 0 15px 15px 0;">
+            <div  v-for="field in filtersFields" v-bind:key="field.key" class="filter-box uk-float-left" style="width: 230px; margin: 0 15px 15px 0;">
                 <div style="text-align: center; margin-bottom: 5px; color: #07D; font-size: 13px">
                     <strong>{{ field.title }}</strong>
                 </div>
@@ -79,7 +79,7 @@
                         return field.filterable
                     })
                 }
-            },
+            }
         },
         methods: {
             applyFilters: function(){
