@@ -65,6 +65,9 @@ export default{
                     case '<=':
                         result = (self.compare(field, filter) <  0) ? false : true
                         break
+                    case '%like%':
+                        result = (field.value.indexOf(filter.value) > -1) ? true : false;
+                        break
                     default:
                         result = false
                 }

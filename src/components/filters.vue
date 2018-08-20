@@ -1,7 +1,7 @@
 <template>
     <div class="uk-form">
         <div>
-            <div  v-for="field in filtersFields" v-bind:key="field.key" class="filter-box" style="float: left; width: 235px; margin-right: 15px;">
+            <div  v-for="field in filtersFields" v-bind:key="field.key" class="filter-box" style="float: left; width: 230px; margin: 0 15px 15px 0;">
                 <div style="text-align: center; margin-bottom: 5px; color: #07D; font-size: 13px">
                     <strong>{{ field.title }}</strong>
                 </div>
@@ -18,7 +18,7 @@
                     </select>
                     <div class="uk-form-icon">
                         <i class="uk-icon-filter "></i>
-                        <input @input="updateFilters({key: field.key, value: $event.target.value})" ref="inputs" type="text" class="uk-form-small">
+                        <input @input="updateFilters({key: field.key, value: $event.target.value})" ref="inputs" type="text" class="uk-form-small" style="width: 155px">
                     </div>
                 </div>
             </div>
@@ -60,6 +60,7 @@
                         '<': '<',
                         '>=': '>=',
                         '<=': '<=',
+                        '%like%': '%like%'
                     }
                 }
             }
@@ -82,7 +83,6 @@
         },
         methods: {
             applyFilters: function(){
-                console.log('applyFilters')
                 let rawFilters = JSON.parse(JSON.stringify(this.rawFilters))
                 let filters = []
                 for(let i in rawFilters){
@@ -122,32 +122,6 @@
             }
         }
     }
-
-    //            let filters = [
-    //                    {
-    //                        key: 'date',
-    //                        operator: '>=',
-    //                        value: '13.08.1999',
-    //                        format: 'dd.mm.yyyy'
-    //                    },
-    //                    {
-    //                        key: 'user',
-    //                        operator: '=',
-    //                        value: 'use2'
-    //                    },
-    //                    {
-    //                        key: 'orderno',
-    //                        operator: '>=',
-    //                        value: '3123'
-    //                    },
-    //                ]
-
-    //            filters: function () {
-    //                return this.fields.filter(f => {
-    //                    console.log(f)
-    //                    return f.filterable
-    //                })
-    //            }
 </script>
 
 <style lang="scss">
