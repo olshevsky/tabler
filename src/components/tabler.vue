@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div>
-            <v-toogle :state="propFilters" @change="onDisplayFilters"></v-toogle>
-            <v-filters v-if="propFilters" :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
+        <div v-if="hasFilters">
+            <v-toogle :state="displayFilters" @change="onDisplayFilters" class="uk-margin-bottom">{{ trans.filters }} </v-toogle>
+            <v-filters v-if="displayFilters" :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
         </div>
         <div class="search">
-            <div class="right">
+            <div class="right uk-float-right">
                 <a v-on:click="clearSearch()">
                     <i class="uk-icon-trash"></i>
                 </a>
             </div>
-            <div class="left">
+            <div class="uk-float-right">
                 <form class="uk-search">
                     <input v-model="searchBy"
                            class="uk-search-field"
@@ -18,7 +18,7 @@
                            :placeholder="trans.searchBy"/>
                 </form>
             </div>
-            <div class="fclear"></div>
+            <div class="uk-clearfix"></div>
         </div>
         <table :class="tableClass">
             <caption v-if="caption">
@@ -72,7 +72,7 @@
             </tfoot>
         </table>
         <div>
-            <div class="uk-form">
+            <div class="uk-form uk-text-center">
                 {{ trans.perPage }}:
                 <select v-bind="perPageOptions" v-model="displayOnPage">
                     <option v-for="option in perPageOptions"
@@ -141,7 +141,6 @@
             page: { type: Number, default: 1},
             tableClass: { type: String, default: 'uk-table uk-table-hover'},
             caption: { type: String, default: null},
-            showFilters: { type: Boolean, default: false},
             trans: { type: Object, default: () => {
                 return {
                     noImage: 'Нет картинки',
@@ -165,7 +164,7 @@
                 sortOrderDesc: false,
                 displayOnPage: this.perPage,
                 perPageOptions: [5, 10, 15, 25, 50, 100],
-                propFilters: this.showFilters,
+                displayFilters: false,
                 filters: null,
                 data: this.parseData(this.json)
             }
@@ -259,7 +258,7 @@
                 this.filters = filters
             },
             onDisplayFilters: function(data){
-                this.propFilters = data
+                this.displayFilters = data
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -369,10 +368,20 @@
                 let result = range(startIndex, endIndex)
 
                 return result
+            },
+            hasFilters: function () {
+                var result = false
+                for(let i in this.fields){
+                    if(this.fields[i].filterable === true){
+                        result = true
+                        break
+                    }
+                }
+                return result
             }
         },
         watch: {
-            'currentPage': function () {
+            currentPage: function () {
                 if (this.currentPage > this.totalPages)
                     this.currentPage = this.totalPages
                 if (this.currentPage < 1)
@@ -381,10 +390,10 @@
             searchBy: function(){
                 this.currentPage = 1
             },
-            'sortBy': function () {
+            sortBy: function () {
                 this.sortOrderDesc = false
             },
-            'displayOnPage': function(){
+            displayOnPage: function(){
                 this.currentPage = 1
             }
         }
@@ -401,19 +410,12 @@
     $label-blue-color: #07D;
     $grey-color: #8a8a8a;
 
-    .search .left,
-    .search .right{
-        float: right;
-    }
     .search .right i {
         margin-top: 6px;
         font-size: 16px;
     }
     .search .right a {
         z-index: 99;
-    }
-    .fclear{
-        clear: both;
     }
     audio{
         height: 30px;

@@ -1,11 +1,11 @@
 <template>
     <div>
-        <span>
+        <label class="label">
             <slot></slot>
-        </span>
+        </label>
         <a @click="click">
-            <i v-if="propState" class="uk-icon-toggle-on toogle"></i>
-            <i v-else class="uk-icon-toggle-off toogle"></i>
+            <span v-if="propState" class="uk-icon-toggle-on uk-icon-small toogle"></span>
+            <span v-else class="uk-icon-toggle-off uk-icon-small toogle"></span>
         </a>
     </div>
 </template>
@@ -31,8 +31,11 @@
 </script>
 
 <style>
-    .toogle{
+    .toogle, .label{
         color: #07D;
-        font-size: 21px;
+    }
+    .label{
+        font-size: 13px;
+        font-weight: bold;
     }
 </style>
