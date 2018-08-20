@@ -4,22 +4,7 @@
             <v-toogle :state="displayFilters" @change="onDisplayFilters" class="uk-margin-bottom">{{ trans.filters }} </v-toogle>
             <v-filters v-if="displayFilters" :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
         </div>
-        <div class="search">
-            <div class="right uk-float-right">
-                <a v-on:click="clearSearch()">
-                    <i class="uk-icon-trash"></i>
-                </a>
-            </div>
-            <div class="uk-float-right">
-                <form class="uk-search">
-                    <input v-model="searchBy"
-                           class="uk-search-field"
-                           type="search"
-                           :placeholder="trans.searchBy"/>
-                </form>
-            </div>
-            <div class="uk-clearfix"></div>
-        </div>
+        <v-search v-if="search" :trans="trans" @change="onSearch"></v-search>
         <table :class="tableClass">
             <caption v-if="caption">
                 {{caption}}
@@ -116,11 +101,12 @@
 
 <script>
 
-    import Button from './button.vue'
-    import Checkbox from './checkbox.vue'
-    import Download from './download.vue'
-    import Filters from './filters.vue';
-    import Toogle from './toogle.vue';
+    import Toogle from './el/toogle.vue'
+    import Button from './el/button.vue'
+    import Checkbox from './el/checkbox.vue'
+    import Download from './el/download.vue'
+    import Filters from './filters.vue'
+    import Search from './search.vue'
     import Fields from '../lib/fields.js'
     import lang from '../lang/ru.json'
 
@@ -129,11 +115,12 @@
     export default{
         name: "tabler",
         components: {
+            'v-toogle': Toogle,
             'v-button': Button,
             'v-checkbox': Checkbox,
             'v-download': Download,
             'v-filters': Filters,
-            'v-toogle': Toogle
+            'v-search': Search
         },
         props: {
             url: { type: String},
@@ -143,7 +130,8 @@
             page: { type: Number, default: 1},
             tableClass: { type: String, default: 'uk-table uk-table-hover'},
             caption: { type: String, default: null},
-            trans: { type: Object, default: () => { return lang }}
+            trans: { type: Object, default: () => { return lang }},
+            search: { type: Boolean, default: true }
         },
         data: function () {
             return {
@@ -248,6 +236,9 @@
             },
             onDisplayFilters: function(data){
                 this.displayFilters = data
+            },
+            onSearch: function (by) {
+                this.searchBy = by
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -393,19 +384,11 @@
 
     @import '../uikit/css/uikit.almost-flat.css';
     @import '../uikit/css/components/form-advanced.css';
-    @import '../uikit/css/components/search.almost-flat.min.css';
 
     $primary-blue-color: #00a8e6;
     $label-blue-color: #07D;
     $grey-color: #8a8a8a;
 
-    .search .right i {
-        margin-top: 6px;
-        font-size: 16px;
-    }
-    .search .right a {
-        z-index: 99;
-    }
     audio{
         height: 30px;
         min-width: 180px;
