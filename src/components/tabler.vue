@@ -122,6 +122,8 @@
     import Filters from './filters.vue';
     import Toogle from './toogle.vue';
     import Fields from '../lib/fields.js'
+    import lang from '../lang/ru.json'
+
     // import {_} from 'underscore';
 
     export default{
@@ -141,20 +143,7 @@
             page: { type: Number, default: 1},
             tableClass: { type: String, default: 'uk-table uk-table-hover'},
             caption: { type: String, default: null},
-            trans: { type: Object, default: () => {
-                return {
-                    noImage: 'Нет картинки',
-                    noAudio: 'Нет аудио',
-                    perPage: 'На страницу',
-                    page: 'Страница',
-                    from: 'из',
-                    results: 'Результатов',
-                    searchBy: 'Поиск',
-                    filters: 'Фильтры',
-                    apply: 'Применить',
-                    reset: 'Сбросить'
-                }
-            }}
+            trans: { type: Object, default: () => { return lang }}
         },
         data: function () {
             return {
