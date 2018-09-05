@@ -185,6 +185,25 @@
             },
             parseData: function(rawData){
                 let data = []
+                let i = 0
+                rawData.forEach((item) => {
+                    let row = {}
+                    this.fields.forEach((field) => {
+                        row[field.key] = JSON.parse(JSON.stringify(field))
+                        if(typeof item[field.key] === 'string' || typeof item[field.key] === 'number'){
+                            row[field.key].value = item[field.key]
+                        }
+                        else if(item[field.key]){
+                            let values = JSON.parse(JSON.stringify(item[field.key]))
+                            Object.assign(row[field.key], values)
+                        }
+                        row[field.key].rowIndex = i++
+                    })
+                    data.push(row)
+                })
+
+                /*
+                let data = []
                 for(let i in rawData){
                     let row = {}
                     for(let j in this.fields){
@@ -200,6 +219,7 @@
                     }
                     data[i] = row
                 }
+                */
 
                 return data
             },
@@ -278,6 +298,9 @@
                 }
             },
             renderField(field){
+//                if(field.type === 'number'){
+//                    console.log(field.value)
+//                }
                 switch (field.type){
                     case 'img':
                         return this.renderImg(field)
@@ -361,6 +384,12 @@
             }
         },
         watch: {
+            json: {
+                handler: function() {
+                    this.data = this.parseData(this.json)
+                },
+                deep: true
+            },
             currentPage: function () {
                 if (this.currentPage > this.totalPages)
                     this.currentPage = this.totalPages
