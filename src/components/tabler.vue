@@ -124,7 +124,7 @@
         },
         props: {
             url: { type: String},
-            json: { type: Array, default: () => {return null}},
+            json: { default: () => {return []}},
             fields: { type: Array, default: () => {return []}},
             perPage: { type: Number, default: 3},
             page: { type: Number, default: 1},
@@ -184,6 +184,9 @@
                 return false
             },
             parseData: function(rawData){
+                if(!Array.isArray(rawData))
+                    rawData = Object.values(rawData)
+
                 let data = []
                 let i = 0
                 rawData.forEach((item) => {
@@ -197,29 +200,11 @@
                             let values = JSON.parse(JSON.stringify(item[field.key]))
                             Object.assign(row[field.key], values)
                         }
-                        row[field.key].rowIndex = i++
+                        row[field.key].rowIndex = i
                     })
                     data.push(row)
+                    i++
                 })
-
-                /*
-                let data = []
-                for(let i in rawData){
-                    let row = {}
-                    for(let j in this.fields){
-                        row[this.fields[j].key] = JSON.parse(JSON.stringify(this.fields[j]))
-                        if(typeof rawData[i][this.fields[j].key] === 'string'){
-                            row[this.fields[j].key].value = rawData[i][this.fields[j].key]
-                        }
-                        else if(rawData[i][this.fields[j].key]){
-                            let values = JSON.parse(JSON.stringify(rawData[i][this.fields[j].key]))
-                            Object.assign(row[this.fields[j].key], values)
-                        }
-                        row[this.fields[j].key].rowIndex = i
-                    }
-                    data[i] = row
-                }
-                */
 
                 return data
             },
