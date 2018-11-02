@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="wrapp">
-      <tabler :tableClass="'uk-table uk-table-hover'" :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick" :show-filters="true"></tabler>
+      <tabler :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick" :search-by="'admin1'"></tabler>
     </div>
   </div>
 </template>
@@ -12,9 +12,17 @@ import Tabler from './components/tabler.vue'
 //import VueResource from 'vue-resource'
 
 //let json = []
-//for(let i = 0; i < 1000; i++){
-//  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: ''+i, href: 'dasd'})
+//for(let i = 100; i < 200; i++){
+////  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: i, href: 'dasd'})
+//    json[i] = {ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: ''+i, href: 'dasd'}
 //}
+
+//let json = {
+//    "fafas": {ch: { value: 1, checked: false }, date: '12.08.1999', user: 'admin', orderno: '121', href: 'dasd'}
+//}
+//let json = []
+
+//window.json = json
 
 export default {
   name: 'app',
@@ -24,8 +32,7 @@ export default {
             {
                 key: 'ch',
                 type: 'checkbox',
-                title: 'Актывный',
-                sortable: true,
+                title: 'Активный',
                 thClass: 'uk-text-center',
                 tdClass: 'uk-text-center',
                 checked: false
@@ -36,7 +43,7 @@ export default {
                 title: 'Дата',
                 sortable: true,
                 format: 'dd.mm.yyyy',
-                filterable: true,
+                filterable: false,
             },
             {
                 key: 'user',
@@ -50,8 +57,8 @@ export default {
                 type: 'number',
                 title: 'Номер заказа',
                 sortable: true,
-                filterable: true,
-                styles: {"max-width": "max-width: 100px"}
+                filterable: false,
+//                styles: {"max-width": "max-width: 100px"}
             },
             {
                 key: 'href',
@@ -63,7 +70,7 @@ export default {
         ],
 //        json: json
         json: [
-            {ch: { value: '1', checked: true }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'},
+            {trClass: 'huj', ch: { value: '1', checked: true }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'},
             {ch: '2', date: '13.08.1999', user: 'use2', orderno: '3123'},
             {ch: '3', date: '14.08.2002', user: 'admin3', orderno: '415'},
             {ch: '4', date: '12.08.1999', user: 'admin4', orderno: '1234', href: 'dasd'},
@@ -90,6 +97,9 @@ export default {
 </script>
 
 <style>
+  .huj{
+    background-color: #00a8e6;
+  }
   .wrapp{
     width: 800px;
     padding-top: 50px;

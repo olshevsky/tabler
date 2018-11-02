@@ -4,7 +4,7 @@
             <v-toogle :state="displayFilters" @change="onDisplayFilters" class="uk-margin-bottom">{{ trans.filters }} </v-toogle>
             <v-filters v-if="displayFilters" :fields="fields" :trans="trans" @filter="onFilter"></v-filters>
         </div>
-        <v-search v-if="search" :trans="trans" @change="onSearch"></v-search>
+        <v-search v-if="search" :trans="trans" @change="onSearch" :search-by="searchByProp"></v-search>
         <table :class="tableClass">
             <caption v-if="caption">
                 {{caption}}
@@ -32,15 +32,18 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-if="paginatedRows" v-for="(row, index) in paginatedRows" :key="index" >
-                    <td v-for="field in row"
-                        :key="field.key"
-                        :class="(field.tdClass) ? field.tdClass : ''">
-                            <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
-                            <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
-                            <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
-                            <div v-else v-html="renderField(field)"></div>
-                    </td>
+                <tr v-if="paginatedRows"
+                    v-for="(row, index) in paginatedRows"
+                    :key="index"
+                    :class="getTrClass(row)">
+                        <td v-for="field in row"
+                            :key="field.key"
+                            :class="(field.tdClass) ? field.tdClass : ''">
+                                <v-button v-if="field.type === 'button'" @clicked="onButtonClick" :field="field"></v-button>
+                                <v-checkbox v-else-if="field.type === 'checkbox'" @checked="onChecked" :field="field"></v-checkbox>
+                                <v-download v-else-if="field.type === 'download'" :field="field"></v-download>
+                                <div v-else v-html="renderField(field)"></div>
+                        </td>
                 </tr>
                 <tr v-else="">
                     <td>no data</td>
@@ -100,7 +103,6 @@
 </template>
 
 <script>
-
     import Toogle from './el/toogle.vue'
     import Button from './el/button.vue'
     import Checkbox from './el/checkbox.vue'
@@ -109,8 +111,6 @@
     import Search from './search.vue'
     import Fields from '../lib/fields.js'
     import lang from '../lang/ru.json'
-
-    // import {_} from 'underscore';
 
     export default{
         name: "tabler",
@@ -126,24 +126,26 @@
             url: { type: String},
             json: { default: () => {return []}},
             fields: { type: Array, default: () => {return []}},
-            perPage: { type: Number, default: 3},
+            perPage: { type: Number, default: 10},
             page: { type: Number, default: 1},
             tableClass: { type: String, default: 'uk-table uk-table-hover'},
             caption: { type: String, default: null},
             trans: { type: Object, default: () => { return lang }},
-            search: { type: Boolean, default: true }
+            search: { type: Boolean, default: true },
+            searchBy: { type: String, default: null },
         },
         data: function () {
             return {
                 currentPage: this.page,
-                searchBy: null,
+                searchByProp: this.searchBy,
                 sortBy: null,
                 sortOrderDesc: false,
                 displayOnPage: this.perPage,
                 perPageOptions: [5, 10, 15, 25, 50, 100],
                 displayFilters: false,
                 filters: null,
-                data: this.parseData(this.json)
+                data: this.parseData(this.json),
+                trClasses: {}
             }
         },
         created: function () {
@@ -151,6 +153,11 @@
                 this.fetchData()
         },
         methods: {
+            getTrClass: function (row) {
+                let keys = Object.keys(row)
+                let rowIndex = (keys.length > 0 && row[keys[0]]) ? row[keys[0]].rowIndex : null
+                return this.trClasses[rowIndex] ? this.trClasses[rowIndex] : ''
+            },
             mark: function (key, to) {
                 to = !to
                 for(let i in this.paginatedRows){
@@ -202,6 +209,7 @@
                         }
                         row[field.key].rowIndex = i
                     })
+                    this.trClasses[i] = item.trClass ? item.trClass : ''
                     data.push(row)
                     i++
                 })
@@ -243,7 +251,7 @@
                 this.displayFilters = data
             },
             onSearch: function (by) {
-                this.searchBy = by
+                this.searchByProp = by
             },
             fetchData: function () {
                 this.$http.get(this.url).then(function(response){
@@ -271,7 +279,7 @@
                     this.currentPage = page
             },
             clearSearch: function () {
-                this.searchBy = null
+                this.searchByProp = null
             },
             sort(by){
                 if(by === this.sortBy ){
@@ -323,8 +331,8 @@
         computed: {
             rows: function () {
                 let rows
-                if (this.searchBy) {
-                    rows = this.data.filter(Fields.search(this.fields, this.searchBy))
+                if (this.searchByProp) {
+                    rows = this.data.filter(Fields.search(this.fields, this.searchByProp))
                 }
                 else{
                     rows = this.data
@@ -381,7 +389,10 @@
                 if (this.currentPage < 1)
                     this.currentPage = 1
             },
-            searchBy: function(){
+            searchBy: function() {
+                this.searchByProp = this.searchBy
+            },
+            searchByProp: function(){
                 this.currentPage = 1
             },
             sortBy: function () {

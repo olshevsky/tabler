@@ -23,11 +23,15 @@
         props: {
             trans: {
                 type: Object
-            }
+            },
+            searchBy: {
+                type: String,
+                default: null
+            },
         },
         data: function () {
           return {
-              by: null
+              by: this.searchBy
           }
         },
         methods: {
@@ -39,7 +43,10 @@
         watch: {
             by: function () {
                 this.$emit('change', this.by)
-            }
+            },
+            searchBy: function() {
+                this.by = this.searchBy
+            },
         }
     }
 </script>
