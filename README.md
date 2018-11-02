@@ -13,7 +13,7 @@ vue build --target lib --name tabler tabler.vue
 ## Props
 
 | __Name__    | __Type__ | __Description__ |__Example__ |
-| ----------- |:--------:| ---------------:| ---------- |
+| ----------- | -------- | --------------- | ---------- |
 | fields      | Array    |                 |            |
 | json        | -        |                 |            |
 | url         | String   |                 |            |
