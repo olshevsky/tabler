@@ -41,6 +41,7 @@ vue build --target lib --name tabler tabler.vue
 All field types has or may has this properties.
 
 | __Name__ | __Type__ | __Description__                                      |
+| -------- | -------- | ---------------------------------------------------- |
 | key      | String   | Key from :json to get field value. Must be unique.   |
 | type     | String   | One of field types listed below. string, number etc. |
 | title    | String   | Table column title.                                  |
@@ -55,6 +56,7 @@ Only default properties.
 
 ### date
 | __Name__ | __Type__ | __Description__                                                                            |
+| -------- | -------- | ------------------------------------------------------------------------------------------ |
 | format   | String   | Date format. Is required for correct sort and filter work. For example dd.mm.yyyy hh:ii:ss |
 
 ### checkbox
@@ -62,11 +64,13 @@ Only default properties.
 
 ### button
 | __Name__ | __Type__ | __Description__       |
+| -------- | -------- | --------------------- |
 | name     | String   | Text inside button.   |
 | icon     | String   | Button <i> tag class. |
 
 ### img
 | __Name__ | __Type__ | __Description__            |
+| -------- | -------- | -------------------------- |
 | width    | Number   | <img> tag width property.  |
 | height   | Number   | <img> tag height property. |
 
