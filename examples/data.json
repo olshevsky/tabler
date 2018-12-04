@@ -1,15 +1,93 @@
 [
-  {"name":"Luke Skywalker","species":"Human","homeworld":"Tatooine","age":25,"activity":"2078-05-31 04:01:53"},
-  {"name":"Darth Vader","species":"Cyborg","homeworld":"Tatooine","age":50,"activity":"2077-03-17 13:04:04"},
-  {"name":"Han Solo","species":"Human","homeworld":"Corellia","age":40,"activity":"2077-08-02 14:38:38"},
-  {"name":"Yoda","species":"Unknown","homeworld":"Unknown","age":9999,"activity":"2076-12-19 22:52:39"},
-  {"name":"Princess Leia Organa","species":"Human","homeworld":"Alderaan","age":25,"activity":"2077-12-16 11:42:23"},
-  {"name":"Chewbacca","species":"Wookiee","homeworld":"Kashyyyk","age":35,"activity":"2077-10-28 06:00:33"},
-  {"name":"R2-D2","species":"Droid","homeworld":"Tatooine","age":10,"activity":"2078-07-23 21:11:28"},
-  {"name":"Obi-Wan Kenobi","species":"Human","homeworld":"Stewjon","age":70,"activity":"2077-11-30 19:56:05"},
-  {"name":"Boba Fett","species":"Human","homeworld":"Kamino","age":30,"activity":"2076-02-16 00:49:21"},
-  {"name":"Emperor Palpatine","species":"Human","homeworld":"Naboo","age":99,"activity":"2078-02-15 11:43:31"},
-  {"name":"C-3PO","species":"Droid","homeworld":"Tatooine","age":10,"activity":"2077-03-21 17:34:27"},
-  {"name":"Lando Calrissian","species":"Human","homeworld":"Socorro","age":37,"activity":"2077-10-19 15:24:30"},
-  {"name":"Grand Moff Tarkin","species":"Human","homeworld":"Eriadu","age":50,"activity":"2076-07-31 19:02:37"}
+  {
+    "name": "Luke Skywalker",
+    "species": "Human",
+    "homeworld": "Tatooine",
+    "age": 25,
+    "activity": "2078-05-31 04:01:53"
+  },
+  {
+    "name": "Darth Vader",
+    "species": "Cyborg",
+    "homeworld": "Tatooine",
+    "age": 50,
+    "activity": "2077-03-17 13:04:04"
+  },
+  {
+    "name": "Han Solo",
+    "species": "Human",
+    "homeworld": "Corellia",
+    "age": 40,
+    "activity": "2077-08-02 14:38:38"
+  },
+  {
+    "name": "Yoda",
+    "species": "Unknown",
+    "homeworld": "Unknown",
+    "age": 9999,
+    "activity": "2076-12-19 22:52:39"
+  },
+  {
+    "name": "Princess Leia Organa",
+    "species": "Human",
+    "homeworld": "Alderaan",
+    "age": 25,
+    "activity": "2077-12-16 11:42:23"
+  },
+  {
+    "name": "Chewbacca",
+    "species": "Wookiee",
+    "homeworld": "Kashyyyk",
+    "age": 35,
+    "activity": "2077-10-28 06:00:33"
+  },
+  {
+    "name": "R2-D2",
+    "species": "Droid",
+    "homeworld": "Tatooine",
+    "age": 10,
+    "activity": "2078-07-23 21:11:28"
+  },
+  {
+    "name": "Obi-Wan Kenobi",
+    "species": "Human",
+    "homeworld": "Stewjon",
+    "age": 70,
+    "activity": "2077-11-30 19:56:05"
+  },
+  {
+    "name": "Boba Fett",
+    "species": "Human",
+    "homeworld": "Kamino",
+    "age": 30,
+    "activity": "2076-02-16 00:49:21"
+  },
+  {
+    "name": "Emperor Palpatine",
+    "species": "Human",
+    "homeworld": "Naboo",
+    "age": 99,
+    "activity": "2078-02-15 11:43:31"
+  },
+  {
+    "name": "C-3PO",
+    "species": "Droid",
+    "homeworld": "Tatooine",
+    "age": 10,
+    "activity": "2077-03-21 17:34:27"
+  },
+  {
+    "name": "Lando Calrissian",
+    "species": "Human",
+    "homeworld": "Socorro",
+    "age": 37,
+    "activity": "2077-10-19 15:24:30"
+  },
+  {
+    "name": "Grand Moff Tarkin",
+    "species": "Human",
+    "homeworld": "Eriadu",
+    "age": 50,
+    "activity": "2076-07-31 19:02:37"
+  }
 ]
