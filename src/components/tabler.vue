@@ -123,14 +123,14 @@
             'v-search': Search
         },
         props: {
-            url: { type: String},
-            json: { default: () => {return []}},
-            fields: { type: Array, default: () => {return []}},
-            perPage: { type: Number, default: 10},
-            page: { type: Number, default: 1},
-            tableClass: { type: String, default: 'uk-table uk-table-hover'},
-            caption: { type: String, default: null},
-            trans: { type: Object, default: () => { return lang }},
+            url: { type: String },
+            json: { default: () => { return null } },
+            fields: { type: Array, default: () => {return []} },
+            perPage: { type: Number, default: 10 },
+            page: { type: Number, default: 1 },
+            tableClass: { type: String, default: 'uk-table uk-table-hover' },
+            caption: { type: String, default: null },
+            trans: { type: Object, default: () => { return lang } },
             search: { type: Boolean, default: true },
             searchBy: { type: String, default: null },
         },
@@ -414,7 +414,7 @@
     $grey-color: #8a8a8a;
 
     audio{
-        height: 30px;
+        height: 50px;
         min-width: 180px;
     }
     .uk-table th{
