@@ -144,13 +144,15 @@
                 perPageOptions: [5, 10, 15, 25, 50, 100],
                 displayFilters: false,
                 filters: null,
-                data: this.parseData(this.json),
+                data: [],
                 trClasses: {}
             }
         },
         created: function () {
             if(!this.json && this.url)
                 this.fetchData()
+            else
+                this.data = this.parseData(this.json)
         },
         methods: {
             getTrClass: function (row) {
@@ -291,9 +293,6 @@
                 }
             },
             renderField(field){
-//                if(field.type === 'number'){
-//                    console.log(field.value)
-//                }
                 switch (field.type){
                     case 'img':
                         return this.renderImg(field)
