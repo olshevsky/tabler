@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple AJAX table example</title>
+    <link rel="stylesheet" href="../src/components/dist/tabler.css"/>
+</head>
+<body>
+<div id="app" class="wrapper">
+    <tabler :fields="fields" :url="url"></tabler>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.17-beta.0/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue-resource/1.5.0/vue-resource.min.js"></script>
+<script src="../src/components/dist/tabler.umd.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        components: {
+            tabler
+        },
+        data: {
+            fields: [
+                { key: 'name', type: 'string', title: 'Name', sortable: true },
+                { key: 'species', type: 'string', title: 'Species' },
+                { key: 'homeworld', type: 'string', title: 'Homeworld' },
+                { key: 'age', type: 'number', title: 'Age', sortable: true },
+                { key: 'activity', type: 'date', format: 'yyyy-mm-dd HH:ii:ss', title: 'Last activity', sortable: true },
+            ],
+            url: './data.json'
+        }
+    })
+</script>
+<style>
+    .wrapper{
+        max-width: 1000px;
+        margin: 100px auto 0 auto;
+    }
+</style>
+</body>
+</html>
