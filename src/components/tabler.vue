@@ -110,7 +110,7 @@
     import Filters from './filters.vue'
     import Search from './search.vue'
     import Fields from '../lib/fields.js'
-    import lang from '../lang/ru.json'
+    import lang from '../lang/en.json'
 
     export default{
         name: "tabler",
