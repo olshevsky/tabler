@@ -414,7 +414,7 @@
     $grey-color: #8a8a8a;
 
     audio{
-        height: 50px;
+        height: 55px;
         min-width: 180px;
     }
     .uk-table th{
