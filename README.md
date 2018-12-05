@@ -5,10 +5,12 @@ npm i
 
 ## Run demo app
 cd ./src
+
 vue serve
 
 ## Build lib
 cd ./src/components
+
 vue build --target lib --name tabler tabler.vue
 
 ## Props
