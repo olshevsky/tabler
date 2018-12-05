@@ -1,94 +1,269 @@
 <template>
   <div id="app">
     <div class="wrapp">
-      <tabler :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick" :search-by="'admin1'"></tabler>
+      <tabler :fields="fields" :json="json" :page="1" :per-page="10" @clicked="onButtonClick" :search-by="'vader'"></tabler>
     </div>
   </div>
 </template>
 
 <script>
 
-import Tabler from './components/tabler.vue'
+import Tabler from './components/tabler.vue';
 //import VueResource from 'vue-resource'
-
-//let json = []
-//for(let i = 100; i < 200; i++){
-////  json.push({ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: i, href: 'dasd'})
-//    json[i] = {ch: { value: i, checked: false }, date: '12.08.1999', user: 'admin'+i, orderno: ''+i, href: 'dasd'}
-//}
-
-//let json = {
-//    "fafas": {ch: { value: 1, checked: false }, date: '12.08.1999', user: 'admin', orderno: '121', href: 'dasd'}
-//}
-//let json = []
-
-//window.json = json
 
 export default {
   name: 'app',
+  methods:{
+      onButtonClick: function (field) {
+          console.log(field)
+          if(field.key === 'delete'){
+              this.json.splice(field.rowIndex, 1)
+          }
+          if(field.key === 'watch'){
+              confirm('You pressed watch button!')
+          }
+      },
+      onChecked: function (field) {
+          console.log(field)
+          confirm('You checked field!')
+      }
+  },
   data: function() {
     return {
         fields: [
             {
                 key: 'ch',
                 type: 'checkbox',
-                title: 'Активный',
+                title: 'Select',
                 thClass: 'uk-text-center',
                 tdClass: 'uk-text-center',
                 checked: false
             },
             {
-                key: 'date',
-                type: 'date',
-                title: 'Дата',
-                sortable: true,
-                format: 'dd.mm.yyyy',
-                filterable: false,
-            },
-            {
-                key: 'user',
+                key: 'name',
                 type: 'string',
-                title: 'Пользователь',
+                title: 'Name',
                 sortable: true,
                 filterable: true
             },
             {
-                key: 'orderno',
-                type: 'number',
-                title: 'Номер заказа',
-                sortable: true,
-                filterable: false,
-//                styles: {"max-width": "max-width: 100px"}
+                key: 'pic',
+                type: 'img',
+                title: 'Picture',
+                width: 75,
+                thClass: 'uk-text-center',
+                tdClass: 'uk-text-center'
             },
             {
-                key: 'href',
+                key: 'homeworld',
+                type: 'string',
+                title: 'Homeworld',
+                sortable: true,
+                filterable: true
+            },
+            {
+                key: 'age',
+                type: 'number',
+                title: 'Age',
+                sortable: true,
+                filterable: true
+            },
+            {
+                key: 'activity',
+                type: 'date',
+                format: 'yyyy-mm-dd HH:ii:ss',
+                title: 'Last activity',
+                sortable: true
+            },
+            {
+                key: 'audio',
+                type: 'audio',
+                title: 'Voice'
+            },
+            {
+                key: 'watch',
+                type: 'button',
+                title: 'Watch',
+                class: 'uk-button uk-button-primary',
+                name: 'Watch',
+                icon: 'uk-icon-eye'
+            },
+            {
+                key: 'delete',
+                type: 'button',
+                title: 'Delete',
+                class: 'uk-button uk-button-danger',
+                icon: 'uk-icon-trash'
+            },
+            {
+                key: 'file',
                 type: 'download',
-                title: 'Скачать',
+                title: 'File',
                 thClass: 'uk-text-center',
                 tdClass: 'uk-text-center'
             },
         ],
-//        json: json
         json: [
-            {trClass: 'huj', ch: { value: '1', checked: true }, date: '12.08.1999', user: 'admin1', orderno: '1234', href: 'dasd'},
-            {ch: '2', date: '13.08.1999', user: 'use2', orderno: '3123'},
-            {ch: '3', date: '14.08.2002', user: 'admin3', orderno: '415'},
-            {ch: '4', date: '12.08.1999', user: 'admin4', orderno: '1234', href: 'dasd'},
-            {ch: '5', date: '13.08.1999', user: 'user', orderno: '3123'},
-            {ch: '6', date: '14.08.1970', user: 'admin', orderno: '415'},
-            {ch: '7', date: '15.08.1999', user: 'user', orderno: '412412'},
-            {ch: '8', date: '12.08.2000', user: 'admin', orderno: '1234', href: 'dasd'},
-            {ch: '9', date: '13.08.1999', user: 'user', orderno: '3123'},
-            {ch: '10', date: '14.08.1998', user: 'admin', orderno: '415'},
-            {ch: '11', date: '15.08.1999', user: 'user', orderno: '412412'},
-            {ch: '12', date: '15.08.2015', user: 'user', orderno: '412412'},
+            {
+                ch: { checked: true, value: 1 },
+                pic: 'https://upload.wikimedia.org/wikipedia/en/9/9b/Luke_Skywalker.png',
+                name: 'Luke Skywalker',
+                homeworld: 'Tatooine',
+                age: 25,
+                activity: '2078-05-31 04:01:53',
+                file: './file.txt',
+                watch: '1',
+                delete: '1',
+                trClass: 'jedi'
+            },
+            {
+                ch: 2,
+                name: 'Darth Vader',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/7/76/Darth_Vader.jpg',
+                species: 'Cyborg',
+                homeworld: 'Tatooine',
+                age: 50,
+                activity: '2077-03-17 13:04:04',
+                audio: 'https://www.thesoundarchive.com/starwars/swvader02.mp3',
+                file: './file.txt',
+                watch: '2',
+                delete: '2',
+                trClass: 'sith'
+            },
+            {
+                ch: 3,
+                name: 'Han Solo',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/b/be/Han_Solo_depicted_in_promotional_image_for_Star_Wars_%281977%29.jpg',
+                species: 'Human',
+                homeworld: 'Corellia',
+                age: 40,
+                activity: '2077-08-02 14:38:38',
+                file: './file.txt',
+                watch: '3',
+                delete: '3',
+            },
+            {
+                ch: 4,
+                name: 'Yoda',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/9/9b/Yoda_Empire_Strikes_Back.png',
+                species: 'Unknown',
+                homeworld: 'Unknown',
+                age: 9999,
+                activity: '2076-12-19 22:52:39',
+                file: './file.txt',
+                watch: '4',
+                delete: '4',
+                trClass: 'jedi'
+            },
+            {
+                ch: 5,
+                name: 'Princess Leia Organa',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/1/1b/Princess_Leia%27s_characteristic_hairstyle.jpg',
+                species: 'Human',
+                homeworld: 'Alderaan',
+                age: 25,
+                file: './file.txt',
+                watch: '5',
+                delete: '5',
+                activity: '2077-12-16 11:42:23'
+            },
+            {
+                ch: 6,
+                name: 'Chewbacca',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/6/6d/Chewbacca-2-.jpg',
+                species: 'Wookiee',
+                homeworld: 'Kashyyyk',
+                age: 35,
+                activity: '2077-10-28 06:00:33',
+                file: './file.txt',
+                watch: '6',
+                delete: '6',
+            },
+            {
+                ch: 7,
+                name: 'R2-D2',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/3/39/R2-D2_Droid.png',
+                species: 'Droid',
+                homeworld: 'Tatooine',
+                age: 10,
+                activity: '2078-07-23 21:11:28',
+                file: './file.txt',
+                watch: '7',
+                delete: '7',
+            },
+            {
+                ch: 8,
+                name: 'Obi-Wan Kenobi',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/3/32/Ben_Kenobi.png',
+                species: 'Human',
+                homeworld: 'Stewjon',
+                age: 70,
+                activity: '2077-11-30 19:56:05',
+                file: './file.txt',
+                watch: '8',
+                delete: '8',
+                trClass: 'jedi'
+            },
+            {
+                ch: 9,
+                name: 'Boba Fett',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/3/3e/FettbobaJB.png',
+                species: 'Human',
+                homeworld: 'Kamino',
+                age: 30,
+                activity: '2076-02-16 00:49:21',
+                file: './file.txt',
+                watch: '9',
+                delete: '9',
+            },
+            {
+                ch: 10,
+                name: 'Emperor Palpatine',
+                pic: 'https://upload.wikimedia.org/wikipedia/en/8/8f/Emperor_RotJ.png',
+                species: 'Human',
+                homeworld: 'Naboo',
+                age: 99,
+                activity: '2078-02-15 11:43:31',
+                file: './file.txt',
+                watch: '10',
+                delete: '10',
+                trClass: 'sith'
+            },
+            {
+                ch: 11,
+                name: 'C-3PO',
+                species: 'Droid',
+                homeworld: 'Tatooine',
+                age: 10,
+                activity: '2077-03-21 17:34:27',
+                file: './file.txt',
+                watch: '11',
+                delete: '11',
+            },
+            {
+                ch: 12,
+                name: 'Lando Calrissian',
+                species: 'Human',
+                homeworld: 'Socorro',
+                age: 37,
+                activity: '2077-10-19 15:24:30',
+                file: './file.txt',
+                watch: '12',
+                delete: '12',
+            },
+            {
+                ch: 13,
+                name: 'Grand Moff Tarkin',
+                species: 'Human',
+                homeworld: 'Eriadu',
+                age: 50,
+                activity: '2076-07-31 19:02:37',
+                file: './file.txt',
+                watch: '13',
+                delete: '13',
+            },
         ]
     }
-  },
-  methods: {
-      onButtonClick: function (field) {
-          console.log(field)
-      }
   },
   components: {
     'tabler': Tabler
@@ -97,18 +272,15 @@ export default {
 </script>
 
 <style>
-  .huj{
-    background-color: #00a8e6;
-  }
   .wrapp{
-    width: 800px;
+    width: 1200px;
     padding-top: 50px;
     margin: 0 auto;
   }
-  .fleft{
-    float: left;
+  .jedi{
+    background-color: #cbe7ff;
   }
-  .fclear{
-    clear: both;
+  .sith{
+    background-color: #ffc4ce;
   }
 </style>
